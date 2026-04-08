@@ -1,0 +1,2 @@
+# DiversoTalk
+backstage - scrum
