@@ -1,6 +1,6 @@
 {
   "rewrites": [
     { "source": "/convite/:token", "destination": "/convite/index.html" },
-    { "source": "/((?!api/).*)", "destination": "/index.html" }
+    { "source": "/((?!convite/).*)", "destination": "/index.html" }
   ]
 }

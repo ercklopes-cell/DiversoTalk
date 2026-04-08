@@ -5,180 +5,202 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="theme-color" content="#0F1117">
 <meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>DiversoTalk</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-:root{--brand:#F5A623;--brand-d:#C97E0A;--bg:#0F1117;--bg2:#181C26;--bg3:#1E2334;--surf:#242A3B;--surf2:#2C3347;--brd:rgba(255,255,255,0.08);--txt:#F0F2F8;--muted:#8A91A6;--danger:#EF4444;--success:#22C55E;--warn:#F5A623;--info:#3B82F6;--purple:#8B5CF6}
+:root{
+  --brand:#F5A623;--brand-d:#C97E0A;
+  --bg:#0F1117;--bg2:#181C26;--surf:#242A3B;--surf2:#2C3347;
+  --brd:rgba(255,255,255,0.08);--brd2:rgba(255,255,255,0.14);
+  --txt:#F0F2F8;--muted:#8A91A6;
+  --danger:#EF4444;--success:#22C55E;--warn:#F5A623;--info:#3B82F6;--purple:#8B5CF6
+}
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-html,body{height:100%;overflow:hidden;font-family:'Barlow',sans-serif;background:var(--bg);color:var(--txt)}
+html,body{height:100%;overflow:hidden;font-family:'Barlow',sans-serif;background:var(--bg);color:var(--txt);font-size:16px}
 h1,h2,h3,h4{font-family:'Barlow Condensed',sans-serif}
+button,input,select,textarea{font-family:'Barlow',sans-serif}
 
 /* ── SCREENS ── */
-.scr{display:none;position:fixed;inset:0;flex-direction:column}
+.scr{display:none;position:fixed;inset:0;flex-direction:column;background:var(--bg)}
 .scr.on{display:flex}
 
+/* ── LOADING ── */
+#s-loading{align-items:center;justify-content:center;gap:20px;background:var(--bg)}
+.logo-mark{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:48px;letter-spacing:3px;color:var(--brand)}
+.logo-mark span{color:var(--txt)}
+.spin{width:32px;height:32px;border:3px solid var(--brd2);border-top-color:var(--brand);border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
 /* ── LOGIN ── */
-#s-login{align-items:center;justify-content:center;padding:32px 24px;gap:20px;background:var(--bg)}
-.logo-big{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:52px;letter-spacing:2px;color:var(--brand)}
-.logo-big span{color:var(--txt)}
+#s-login{align-items:center;justify-content:center;padding:28px 20px;gap:18px;overflow-y:auto}
 .login-sub{font-size:14px;color:var(--muted);text-align:center;max-width:280px;line-height:1.6}
-.login-card{background:var(--bg2);border:1px solid var(--brd);border-radius:14px;padding:24px;width:100%;max-width:360px}
-.login-card h3{font-size:18px;margin-bottom:16px}
-.btn-google{width:100%;height:52px;background:#fff;color:#1f1f1f;border:none;border-radius:10px;display:flex;align-items:center;justify-content:center;gap:12px;font-size:15px;font-weight:600;cursor:pointer;transition:opacity .15s}
-.btn-google:hover{opacity:.9}
-.btn-google:active{opacity:.8;transform:scale(.98)}
-.g-icon{width:22px;height:22px}
-.divider{display:flex;align-items:center;gap:10px;margin:14px 0;color:var(--muted);font-size:12px}
+.login-card{background:var(--bg2);border:1px solid var(--brd);border-radius:14px;padding:22px;width:100%;max-width:360px}
+.login-card h3{font-size:18px;margin-bottom:14px}
+.btn-google{width:100%;height:54px;background:#fff;color:#1f1f1f;border:none;border-radius:10px;display:flex;align-items:center;justify-content:center;gap:12px;font-size:15px;font-weight:600;cursor:pointer;transition:opacity .15s,transform .1s}
+.btn-google:hover{opacity:.92}
+.btn-google:active{transform:scale(.97)}
+.g-svg{width:22px;height:22px;flex-shrink:0}
+.divider{display:flex;align-items:center;gap:10px;margin:13px 0;color:var(--muted);font-size:12px}
 .divider::before,.divider::after{content:'';flex:1;height:1px;background:var(--brd)}
-.invite-input-row{display:flex;gap:8px}
+.inv-row{display:flex;gap:8px}
 
 /* ── TOPBAR ── */
-.topbar{background:var(--bg2);border-bottom:1px solid var(--brd);height:56px;padding:0 14px;display:flex;align-items:center;gap:10px;flex-shrink:0;z-index:20}
-.tl{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:22px;color:var(--brand);letter-spacing:1px}
-.proj-badge{background:var(--surf);border:1px solid var(--brd);border-radius:6px;padding:3px 9px;font-size:11px;color:var(--muted);max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.topbar{background:var(--bg2);border-bottom:1px solid var(--brd);height:54px;padding:0 12px;display:flex;align-items:center;gap:9px;flex-shrink:0;z-index:20}
+.tl{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:21px;color:var(--brand);letter-spacing:1px;cursor:pointer}
+.proj-pill{background:var(--surf);border:1px solid var(--brd);border-radius:5px;padding:3px 8px;font-size:11px;color:var(--muted);max-width:110px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .sp{flex:1}
 .rbadge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:4px;text-transform:uppercase;letter-spacing:.5px}
-.rbadge.supervisor{background:rgba(245,166,35,.15);color:var(--brand)}
-.rbadge.engenheiro{background:rgba(59,130,246,.15);color:var(--info)}
-.rbadge.worker{background:rgba(139,92,246,.15);color:var(--purple)}
+.rbadge.supervisor,.rbadge.engenheiro{background:rgba(245,166,35,.18);color:var(--brand)}
+.rbadge.marcenaria{background:rgba(139,92,246,.18);color:#C4B5FD}
+.rbadge.eletrica{background:rgba(59,130,246,.18);color:#93C5FD}
+.rbadge.staff{background:rgba(20,184,166,.18);color:#5EEAD4}
 .av{width:34px;height:34px;border-radius:50%;background:var(--brand);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;color:#000;cursor:pointer;flex-shrink:0;overflow:hidden}
 .av img{width:100%;height:100%;object-fit:cover;border-radius:50%}
+.tb-btn{height:32px;padding:0 10px;font-size:11px;background:var(--surf);border:1px solid var(--brd);border-radius:7px;color:var(--txt);cursor:pointer;display:flex;align-items:center;gap:5px;transition:border-color .15s}
+.tb-btn:hover{border-color:var(--brd2)}
 
 /* ── CONTENT + BOTTOMNAV ── */
-.content{flex:1;overflow-y:auto;overflow-x:hidden}
+.content{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch}
 .content::-webkit-scrollbar{width:3px}
 .content::-webkit-scrollbar-thumb{background:var(--brd)}
-.bnav{background:var(--bg2);border-top:1px solid var(--brd);display:flex;flex-shrink:0}
-.nb{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;height:60px;font-size:10px;font-weight:600;color:var(--muted);cursor:pointer;border:none;background:none;text-transform:uppercase;letter-spacing:.5px;transition:color .15s;position:relative}
+.tab-pane{display:none}
+.tab-pane.on{display:block}
+.bnav{background:var(--bg2);border-top:1px solid var(--brd);display:flex;flex-shrink:0;padding-bottom:env(safe-area-inset-bottom)}
+.nb{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;height:58px;font-size:10px;font-weight:600;color:var(--muted);cursor:pointer;border:none;background:none;text-transform:uppercase;letter-spacing:.4px;transition:color .15s;position:relative}
 .nb.on{color:var(--brand)}
 .nb svg{width:22px;height:22px}
-.nb .ndot{width:7px;height:7px;background:var(--danger);border-radius:50%;position:absolute;top:8px;right:calc(50% - 16px)}
+.nb .ndot{width:7px;height:7px;background:var(--danger);border-radius:50%;position:absolute;top:6px;right:calc(50% - 18px);display:none}
 
-/* ── PTT BUTTON ── */
-.ptt{position:fixed;bottom:70px;right:16px;width:66px;height:66px;border-radius:50%;background:var(--brand);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(245,166,35,.4);z-index:100;transition:transform .1s,background .15s,box-shadow .15s;-webkit-user-select:none;user-select:none}
-.ptt.active{background:var(--danger);box-shadow:0 4px 24px rgba(239,68,68,.55);transform:scale(1.06)}
-.ptt svg{width:28px;height:28px;color:#000;pointer-events:none}
-.ptt-ring{position:absolute;inset:-6px;border-radius:50%;border:2px solid var(--brand);animation:ring 1.5s ease-in-out infinite;pointer-events:none;opacity:0}
-.ptt.active .ptt-ring{opacity:1}
-@keyframes ring{0%{transform:scale(1);opacity:.6}100%{transform:scale(1.4);opacity:0}}
-
-/* ── PTT OVERLAY ── */
-.ptt-ov{position:fixed;bottom:148px;left:50%;transform:translateX(-50%);background:var(--bg2);border:1px solid var(--brd);border-radius:12px;padding:14px 18px;z-index:101;display:none;min-width:260px;max-width:calc(100vw - 32px);text-align:center;animation:pop .18s ease}
-.ptt-ov.on{display:block}
-@keyframes pop{from{transform:translateX(-50%) translateY(6px);opacity:0}to{transform:translateX(-50%) translateY(0);opacity:1}}
-.ptt-st{font-size:11px;font-weight:700;color:var(--danger);text-transform:uppercase;letter-spacing:.5px;display:flex;align-items:center;justify-content:center;gap:6px;margin-bottom:8px}
+/* ── PTT ── */
+.ptt-btn{position:fixed;bottom:72px;right:16px;width:66px;height:66px;border-radius:50%;background:var(--brand);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 22px rgba(245,166,35,.42);z-index:50;transition:transform .1s,background .15s,box-shadow .15s;-webkit-user-select:none;user-select:none;touch-action:none}
+.ptt-btn.active{background:var(--danger);box-shadow:0 4px 26px rgba(239,68,68,.55);transform:scale(1.06)}
+.ptt-btn svg{width:28px;height:28px;color:#000;pointer-events:none}
+.ptt-ring{position:absolute;inset:-7px;border-radius:50%;border:2px solid currentColor;opacity:0;pointer-events:none;animation:ring 1.6s ease-in-out infinite}
+.ptt-btn.active .ptt-ring{opacity:1;color:var(--danger)}
+@keyframes ring{0%{transform:scale(1);opacity:.5}100%{transform:scale(1.45);opacity:0}}
+.ptt-overlay{position:fixed;bottom:150px;left:50%;transform:translateX(-50%);background:var(--bg2);border:1px solid var(--brd2);border-radius:13px;padding:14px 18px;z-index:51;display:none;min-width:260px;max-width:calc(100vw - 32px);text-align:center}
+.ptt-overlay.on{display:block;animation:slideup .18s ease}
+@keyframes slideup{from{opacity:0;transform:translateX(-50%) translateY(8px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
+.ptt-status{font-size:11px;font-weight:700;color:var(--danger);text-transform:uppercase;letter-spacing:.5px;display:flex;align-items:center;justify-content:center;gap:6px;margin-bottom:7px}
 .rdot{width:7px;height:7px;border-radius:50%;background:var(--danger);animation:blink 1s infinite}
-@keyframes blink{0%,100%{opacity:1}50%{opacity:.15}}
-.ptt-tx{font-size:13px;color:var(--txt);line-height:1.5;min-height:36px}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.1}}
+.ptt-transcript{font-size:13px;color:var(--txt);line-height:1.5;min-height:36px}
 
 /* ── KANBAN ── */
-.kb-wrap{display:flex;gap:12px;padding:14px;overflow-x:auto;height:100%;align-items:flex-start}
-.kb-wrap::-webkit-scrollbar{height:4px}
-.kb-wrap::-webkit-scrollbar-thumb{background:var(--brd);border-radius:2px}
-.kc{min-width:255px;max-width:255px;background:var(--bg2);border:1px solid var(--brd);border-radius:10px;display:flex;flex-direction:column;max-height:calc(100vh - 185px)}
-.kch{padding:11px 13px;border-bottom:1px solid var(--brd);display:flex;align-items:center;gap:8px;flex-shrink:0}
-.kch-title{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:13px;letter-spacing:.5px;text-transform:uppercase;flex:1}
-.kch-count{background:var(--surf);border-radius:10px;padding:1px 7px;font-size:11px;color:var(--muted)}
-.kc-add{padding:7px 10px;border-bottom:1px solid var(--brd);flex-shrink:0}
-.kc-add button{width:100%;height:34px;background:var(--surf);border:1px dashed var(--brd);border-radius:7px;color:var(--muted);font-size:12px;cursor:pointer;transition:border-color .15s,color .15s}
-.kc-add button:hover{border-color:var(--brand);color:var(--brand)}
-.kc-cards{padding:8px;display:flex;flex-direction:column;gap:7px;overflow-y:auto;flex:1}
+.kb-outer{height:100%;display:flex;flex-direction:column}
+.kb-scroll{display:flex;gap:11px;padding:12px;overflow-x:auto;flex:1;align-items:flex-start;min-height:0}
+.kb-scroll::-webkit-scrollbar{height:4px}
+.kb-scroll::-webkit-scrollbar-thumb{background:var(--brd);border-radius:2px}
+.kc{min-width:252px;max-width:252px;background:var(--bg2);border:1px solid var(--brd);border-radius:10px;display:flex;flex-direction:column;max-height:100%}
+.kch{padding:11px 12px;border-bottom:1px solid var(--brd);display:flex;align-items:center;gap:7px;flex-shrink:0}
+.kch-t{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:13px;letter-spacing:.5px;text-transform:uppercase;flex:1}
+.kch-n{background:var(--surf);border-radius:9px;padding:1px 7px;font-size:11px;color:var(--muted)}
+.kc-add{padding:7px 9px;border-bottom:1px solid var(--brd);flex-shrink:0}
+.kc-add-btn{width:100%;height:34px;background:transparent;border:1px dashed var(--brd);border-radius:7px;color:var(--muted);font-size:12px;cursor:pointer;transition:border-color .15s,color .15s;font-family:'Barlow',sans-serif}
+.kc-add-btn:hover{border-color:var(--brand);color:var(--brand)}
+.kc-cards{padding:8px;display:flex;flex-direction:column;gap:7px;overflow-y:auto;flex:1;min-height:0}
 .kc-cards::-webkit-scrollbar{width:3px}
 .kc-cards::-webkit-scrollbar-thumb{background:var(--brd)}
-.tc{background:var(--surf);border:1px solid var(--brd);border-radius:8px;padding:11px;cursor:pointer;transition:border-color .15s,transform .1s;active:transform:scale(.98)}
-.tc:hover{border-color:rgba(255,255,255,.18);transform:translateY(-1px)}
-.tc-title{font-size:13px;font-weight:500;line-height:1.4;margin-bottom:7px}
-.tc-meta{display:flex;align-items:center;gap:5px;flex-wrap:wrap}
+.kc-empty{padding:10px 8px;font-size:12px;color:var(--muted);text-align:center}
+.tc{background:var(--surf);border:1px solid var(--brd);border-radius:8px;padding:11px;cursor:pointer;transition:border-color .15s,transform .1s}
+.tc:hover{border-color:var(--brd2);transform:translateY(-1px)}
+.tc:active{transform:scale(.98)}
+.tc-t{font-size:13px;font-weight:500;line-height:1.4;margin-bottom:7px}
+.tc-m{display:flex;align-items:center;gap:5px;flex-wrap:wrap}
+
+/* ── STATUS DOTS ── */
 .dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
 .d-bl{background:var(--muted)}.d-ex{background:var(--info)}.d-im{background:var(--danger)}.d-rv{background:var(--warn)}.d-cn{background:var(--success)}
 
 /* ── PILLS ── */
-.pill{font-size:10px;font-weight:600;padding:2px 7px;border-radius:4px;display:inline-flex;align-items:center;gap:3px}
+.pill{font-size:10px;font-weight:600;padding:2px 7px;border-radius:4px;display:inline-flex;align-items:center;gap:3px;line-height:1.4}
 .pill.alta{background:rgba(239,68,68,.15);color:#FCA5A5}
 .pill.media{background:rgba(245,166,35,.15);color:var(--warn)}
 .pill.baixa{background:rgba(34,197,94,.15);color:#86EFAC}
 .pill.marcenaria{background:rgba(139,92,246,.15);color:#C4B5FD}
 .pill.eletrica{background:rgba(59,130,246,.15);color:#93C5FD}
 .pill.staff{background:rgba(20,184,166,.15);color:#5EEAD4}
-.pill.supervisor{background:rgba(245,166,35,.15);color:var(--brand)}
-.pill.engenheiro{background:rgba(59,130,246,.15);color:var(--info)}
+.pill.supervisor,.pill.engenheiro{background:rgba(245,166,35,.15);color:var(--warn)}
 
 /* ── IMPEDIDO WARNING ── */
-.imp-warn{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);border-radius:8px;padding:9px 12px;margin:12px 14px 0;display:flex;align-items:center;gap:8px;font-size:12px;color:#FCA5A5}
+.imp-warn{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.25);border-radius:8px;padding:9px 12px;margin:10px 12px 0;display:none;align-items:center;gap:8px;font-size:12px;color:#FCA5A5}
+.imp-warn.on{display:flex}
 
 /* ── FEED ── */
-.fi{display:flex;gap:9px;padding:13px 14px;border-bottom:1px solid var(--brd);animation:fadein .2s ease}
-@keyframes fadein{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+.fi{display:flex;gap:9px;padding:12px 13px;border-bottom:1px solid var(--brd);animation:fi-in .22s ease}
+@keyframes fi-in{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
 .fi-av{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;overflow:hidden}
 .fi-av img{width:100%;height:100%;object-fit:cover;border-radius:50%}
 .fi-body{flex:1;min-width:0}
-.fi-hdr{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-bottom:3px}
-.fi-name{font-size:13px;font-weight:600}
-.fi-time{font-size:11px;color:var(--muted)}
-.fi-txt{font-size:13px;line-height:1.5;word-break:break-word}
-.ptt-bubble{background:var(--surf);border:1px solid var(--brd);border-radius:8px;padding:8px 11px;display:flex;align-items:center;gap:8px;margin-top:5px}
+.fi-hdr{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:3px}
+.fi-nm{font-size:13px;font-weight:600}
+.fi-tm{font-size:11px;color:var(--muted)}
+.fi-tx{font-size:13px;line-height:1.5;word-break:break-word}
+.ptt-bbl{background:var(--surf);border:1px solid var(--brd);border-radius:8px;padding:8px 11px;display:flex;align-items:center;gap:8px;margin-top:5px}
 .wave{display:flex;align-items:center;gap:2px;flex-shrink:0}
 .wave span{width:3px;background:var(--brand);border-radius:2px}
-.wave span:nth-child(1){height:7px}.wave span:nth-child(2){height:13px}.wave span:nth-child(3){height:9px}.wave span:nth-child(4){height:15px}.wave span:nth-child(5){height:7px}.wave span:nth-child(6){height:11px}
-.fi-photo{margin-top:7px;border-radius:8px;overflow:hidden;max-height:200px}
-.fi-photo img{width:100%;object-fit:cover}
+.wave span:nth-child(1){height:6px}.wave span:nth-child(2){height:12px}.wave span:nth-child(3){height:8px}.wave span:nth-child(4){height:15px}.wave span:nth-child(5){height:7px}.wave span:nth-child(6){height:10px}
+.fi-photo{margin-top:7px;border-radius:8px;overflow:hidden;max-height:220px;cursor:pointer}
+.fi-photo img{width:100%;object-fit:cover;display:block}
 
 /* ── SECTION HEADER ── */
-.sh{padding:13px 14px 7px;display:flex;align-items:center;justify-content:space-between}
+.sh{padding:12px 13px 6px;display:flex;align-items:center;justify-content:space-between}
 .sh h3{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:15px;letter-spacing:.5px;text-transform:uppercase;color:var(--muted)}
 
 /* ── DASHBOARD ── */
-.sg{display:grid;grid-template-columns:1fr 1fr;gap:9px;padding:14px}
-.sc{background:var(--bg2);border:1px solid var(--brd);border-radius:10px;padding:13px}
-.sc-val{font-family:'Barlow Condensed',sans-serif;font-size:34px;font-weight:800;line-height:1}
-.sc-lb{font-size:11px;color:var(--muted);margin-top:3px;text-transform:uppercase;letter-spacing:.4px}
+.sg{display:grid;grid-template-columns:1fr 1fr;gap:9px;padding:12px}
+.sc{background:var(--bg2);border:1px solid var(--brd);border-radius:10px;padding:12px}
+.sc-v{font-family:'Barlow Condensed',sans-serif;font-size:34px;font-weight:800;line-height:1}
+.sc-l{font-size:11px;color:var(--muted);margin-top:3px;text-transform:uppercase;letter-spacing:.4px}
 .pb{height:5px;background:var(--surf);border-radius:3px;overflow:hidden;margin-top:7px}
-.pbf{height:100%;border-radius:3px;transition:width .5s ease}
-.team-card{background:var(--bg2);border:1px solid var(--brd);border-radius:10px;padding:13px;margin-bottom:9px}
+.pbf{height:100%;border-radius:3px;transition:width .6s ease}
+.tc-card{background:var(--bg2);border:1px solid var(--brd);border-radius:10px;padding:12px;margin-bottom:9px}
 
 /* ── MY TASKS ── */
-.mt-item{padding:12px 14px;border-bottom:1px solid var(--brd);cursor:pointer;transition:background .1s}
+.mt-item{padding:12px 13px;border-bottom:1px solid var(--brd);cursor:pointer;active-background:var(--surf);transition:background .1s}
 .mt-item:active{background:var(--surf)}
-.mt-title{font-size:14px;font-weight:500;flex:1}
-.mt-meta{display:flex;align-items:center;gap:6px;margin-top:5px}
+.mt-hdr{display:flex;align-items:flex-start;gap:8px}
+.mt-title{font-size:14px;font-weight:500;flex:1;line-height:1.4}
+.mt-meta{display:flex;align-items:center;gap:6px;margin-top:5px;flex-wrap:wrap}
 
 /* ── MODALS ── */
-.ov{position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:200;display:none;align-items:flex-end}
+.ov{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:200;display:none;align-items:flex-end}
 .ov.on{display:flex}
-.modal{background:var(--bg2);border-top:1px solid var(--brd);border-radius:16px 16px 0 0;width:100%;max-height:92vh;overflow-y:auto;padding:18px 16px;animation:slideup .2s ease}
+.modal{background:var(--bg2);border-top:1px solid var(--brd);border-radius:16px 16px 0 0;width:100%;max-height:92vh;overflow-y:auto;padding:16px 15px;padding-bottom:calc(16px + env(safe-area-inset-bottom));animation:modalup .2s ease}
 .modal::-webkit-scrollbar{width:3px}
 .modal::-webkit-scrollbar-thumb{background:var(--brd)}
-@keyframes slideup{from{transform:translateY(24px);opacity:0}to{transform:none;opacity:1}}
+@keyframes modalup{from{transform:translateY(28px);opacity:0}to{transform:none;opacity:1}}
 .mh{width:36px;height:4px;background:var(--surf2);border-radius:2px;margin:0 auto 15px}
-.modal h2{font-size:20px;margin-bottom:14px}
-.modal h3{font-size:16px;margin-bottom:10px}
+.modal h2{font-size:20px;margin-bottom:13px}
 
 /* ── FORMS ── */
-.fg{margin-bottom:13px}
+.fg{margin-bottom:12px}
 .fl{display:block;font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px}
-.fi-in,.fi-sel,.fi-ta{width:100%;background:var(--surf);border:1px solid var(--brd);border-radius:8px;color:var(--txt);padding:10px 12px;font-family:'Barlow',sans-serif;font-size:14px;outline:none;transition:border-color .15s;resize:none}
+.fi-in,.fi-sel,.fi-ta{width:100%;background:var(--surf);border:1px solid var(--brd);border-radius:8px;color:var(--txt);padding:10px 12px;font-size:14px;outline:none;transition:border-color .15s;resize:none;-webkit-appearance:none;appearance:none}
 .fi-in:focus,.fi-sel:focus,.fi-ta:focus{border-color:var(--brand)}
 .fi-in::placeholder,.fi-ta::placeholder{color:var(--muted)}
+select.fi-sel{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%238A91A6' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;padding-right:32px}
 select.fi-sel option{background:var(--bg2)}
 
 /* ── BUTTONS ── */
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:0 16px;height:42px;border-radius:8px;font-weight:600;font-size:13px;cursor:pointer;border:none;transition:opacity .15s,transform .1s;min-width:80px;font-family:'Barlow',sans-serif}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:0 16px;height:42px;border-radius:8px;font-weight:600;font-size:13px;cursor:pointer;border:none;transition:opacity .15s,transform .1s;min-width:80px}
 .btn:active{transform:scale(.97)}
 .btn.lg{height:52px;font-size:15px;font-family:'Barlow Condensed',sans-serif;letter-spacing:.5px;text-transform:uppercase}
 .btn-p{background:var(--brand);color:#000}
-.btn-p:hover{opacity:.9}
+.btn-p:hover{opacity:.92}
 .btn-s{background:var(--surf);color:var(--txt);border:1px solid var(--brd)}
-.btn-s:hover{border-color:rgba(255,255,255,.2)}
-.btn-d{background:rgba(239,68,68,.15);color:var(--danger);border:1px solid rgba(239,68,68,.3)}
-.btn-suc{background:rgba(34,197,94,.15);color:var(--success);border:1px solid rgba(34,197,94,.3)}
+.btn-s:hover{border-color:var(--brd2)}
+.btn-d{background:rgba(239,68,68,.12);color:var(--danger);border:1px solid rgba(239,68,68,.25)}
+.btn-suc{background:rgba(34,197,94,.12);color:var(--success);border:1px solid rgba(34,197,94,.25)}
 .row-btns{display:flex;gap:8px;margin-top:8px}
 .row-btns .btn{flex:1}
 
 /* ── STATUS BUTTONS ── */
-.sbrow{display:flex;flex-wrap:wrap;gap:6px;margin-top:7px}
-.sb{padding:6px 11px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;border:1px solid var(--brd);background:var(--surf);color:var(--muted);transition:all .15s;font-family:'Barlow',sans-serif}
+.sbrow{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.sb{padding:7px 11px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;border:1px solid var(--brd);background:var(--surf);color:var(--muted);transition:all .15s}
 .sb.on-backlog{background:rgba(138,145,166,.2);color:var(--muted);border-color:var(--muted)}
 .sb.on-em_execucao{background:rgba(59,130,246,.2);color:var(--info);border-color:var(--info)}
 .sb.on-impedido{background:rgba(239,68,68,.2);color:var(--danger);border-color:var(--danger)}
@@ -187,137 +209,136 @@ select.fi-sel option{background:var(--bg2)}
 
 /* ── UPLOAD ZONE ── */
 .uz{border:2px dashed var(--brd);border-radius:12px;padding:28px 16px;text-align:center;cursor:pointer;transition:border-color .15s}
-.uz:hover{border-color:var(--brand)}
-.uz-txt{font-size:13px;color:var(--muted);margin-top:8px}
+.uz:hover,.uz:active{border-color:var(--brand)}
+.uz p{font-size:13px;color:var(--muted);margin-top:8px}
 
 /* ── INVITE TOKEN ── */
-.inv-token{font-family:monospace;font-size:20px;letter-spacing:3px;color:var(--brand);font-weight:700;text-align:center;padding:14px;background:var(--surf);border-radius:8px;margin:10px 0;cursor:pointer;user-select:all}
+.inv-tok{font-family:monospace;font-size:22px;letter-spacing:3px;color:var(--brand);font-weight:700;text-align:center;padding:14px;background:var(--surf);border-radius:8px;margin:10px 0;cursor:pointer;user-select:all;word-break:break-all}
 
-/* ── PHOTO AREA ── */
-.photo-area{background:var(--surf);border:1px solid var(--brd);border-radius:10px;padding:22px;text-align:center;cursor:pointer}
+/* ── PHOTO ── */
+.photo-area{background:var(--surf);border:1px solid var(--brd);border-radius:10px;padding:22px;text-align:center;cursor:pointer;transition:background .1s}
 .photo-area:active{background:var(--surf2)}
 
 /* ── COMMENTS ── */
 .cm{padding:10px 0;border-bottom:1px solid var(--brd);display:flex;gap:8px}
-.cm-av{width:28px;height:28px;border-radius:50%;background:var(--surf2);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0}
-.cm-body{flex:1}
-.cm-name{font-size:12px;font-weight:600;margin-bottom:2px}
-.cm-txt{font-size:13px;color:var(--txt);line-height:1.5}
-.cm-time{font-size:11px;color:var(--muted);margin-top:2px}
-
-/* ── LOADING OVERLAY ── */
-#loading{position:fixed;inset:0;background:var(--bg);z-index:999;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px}
-#loading .logo-big{font-size:44px}
-.spin{width:32px;height:32px;border:3px solid var(--brd);border-top-color:var(--brand);border-radius:50%;animation:spin 0.8s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
-
-/* ── TOAST ── */
-.toast{position:fixed;top:66px;left:50%;transform:translateX(-50%);background:var(--surf2);border:1px solid var(--brd);border-radius:8px;padding:9px 16px;font-size:13px;z-index:400;display:none;white-space:nowrap;max-width:calc(100vw - 32px);text-align:center}
-.toast.on{display:block;animation:pop .2s ease}
-
-/* ── EMPTY STATES ── */
-.empty{text-align:center;padding:36px 20px;color:var(--muted);font-size:14px}
-
-/* ── AI TASKS PREVIEW ── */
-.ai-item{background:var(--surf);border-radius:8px;padding:10px 12px;margin-bottom:6px;display:flex;align-items:center;gap:10px}
-.ai-item svg{flex-shrink:0}
-.ai-item-info{flex:1}
-.ai-item-title{font-size:13px;font-weight:500;margin-bottom:4px}
-.ai-item-meta{display:flex;gap:5px}
+.cm-av{width:28px;height:28px;border-radius:50%;background:var(--surf2);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;overflow:hidden}
+.cm-av img{width:100%;height:100%;object-fit:cover;border-radius:50%}
+.cm-nm{font-size:12px;font-weight:600;margin-bottom:2px}
+.cm-tx{font-size:13px;line-height:1.5}
+.cm-tm{font-size:11px;color:var(--muted);margin-top:2px}
 
 /* ── SETTINGS ── */
-.set-profile{background:var(--bg2);border:1px solid var(--brd);border-radius:12px;padding:16px;margin-bottom:14px;display:flex;align-items:center;gap:12px}
-.set-name{font-weight:600;font-size:15px}
-.set-email{font-size:12px;color:var(--muted);margin-top:2px}
+.set-card{background:var(--bg2);border:1px solid var(--brd);border-radius:12px;padding:15px;margin-bottom:13px}
+.set-profile-row{display:flex;align-items:center;gap:12px}
+.set-nm{font-weight:600;font-size:15px}
+.set-em{font-size:12px;color:var(--muted);margin-top:2px}
 
-/* ── ONLINE INDICATOR ── */
+/* ── ONLINE ── */
 .online-dot{width:7px;height:7px;border-radius:50%;background:var(--success);flex-shrink:0}
 
-/* Scrollable content in full screen */
-#s-app{background:var(--bg)}
+/* ── TOAST ── */
+.toast{position:fixed;top:64px;left:50%;transform:translateX(-50%);background:var(--surf2);border:1px solid var(--brd2);border-radius:9px;padding:9px 16px;font-size:13px;z-index:400;display:none;white-space:nowrap;max-width:calc(100vw - 32px);text-align:center;pointer-events:none}
+.toast.on{display:block;animation:slideup .2s ease}
+
+/* ── EMPTY ── */
+.empty{text-align:center;padding:36px 20px;color:var(--muted);font-size:14px}
+
+/* ── AI ITEMS ── */
+.ai-item{background:var(--surf);border-radius:8px;padding:10px 12px;margin-bottom:6px;display:flex;align-items:center;gap:10px}
+.ai-item-info .ai-item-title{font-size:13px;font-weight:500;margin-bottom:4px}
+.ai-item-info .ai-item-meta{display:flex;gap:5px}
 </style>
 </head>
 <body>
 
-<!-- LOADING -->
-<div id="loading">
-  <div class="logo-big">DIVERSO<span>TALK</span></div>
+<!-- ══ LOADING ══ -->
+<div id="s-loading" class="scr on">
+  <div class="logo-mark">DIVERSO<span>TALK</span></div>
   <div class="spin"></div>
 </div>
 
-<!-- ══════════ LOGIN SCREEN ══════════ -->
+<!-- ══ LOGIN ══ -->
 <div id="s-login" class="scr">
-  <div class="logo-big" style="margin-top:auto">DIVERSO<span>TALK</span></div>
+  <div class="logo-mark">DIVERSO<span>TALK</span></div>
   <p class="login-sub">Gestão de palcos, eventos e fábricas com comunicação em tempo real</p>
   <div class="login-card">
     <h3>Entrar no Projeto</h3>
     <button class="btn-google" onclick="loginGoogle()">
-      <svg class="g-icon" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+      <svg class="g-svg" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
       Continuar com Google
     </button>
-    <div class="divider">ou use um convite</div>
-    <div class="invite-input-row">
-      <input class="fi-in" id="inv-token-input" placeholder="Token DT-XXXXXXXX" style="flex:1;font-family:monospace;letter-spacing:1px">
-      <button class="btn btn-s" onclick="useInviteToken()">Usar</button>
+    <div class="divider">ou use um token de convite</div>
+    <div class="inv-row">
+      <input class="fi-in" id="inv-tok-in" placeholder="DT-XXXXXXXX" style="flex:1;font-family:monospace;letter-spacing:1px;text-transform:uppercase">
+      <button class="btn btn-s" onclick="useToken()">Usar</button>
     </div>
-    <p style="font-size:11px;color:var(--muted);margin-top:10px;text-align:center">Faça login com Google primeiro, depois use seu token de convite para entrar no projeto.</p>
+    <p style="font-size:11px;color:var(--muted);margin-top:9px;text-align:center">Faça login com Google primeiro, depois aplique o token de convite para entrar no projeto.</p>
   </div>
-  <div style="margin-bottom:auto"></div>
 </div>
 
-<!-- ══════════ APP SCREEN ══════════ -->
+<!-- ══ APP ══ -->
 <div id="s-app" class="scr">
 
   <!-- TOPBAR -->
   <div class="topbar">
-    <div class="tl">DT</div>
-    <div class="proj-badge" id="tb-proj">—</div>
-    <span class="rbadge supervisor" id="tb-role">—</span>
+    <div class="tl" onclick="showTab('kanban')">DT</div>
+    <div class="proj-pill" id="tb-proj">—</div>
+    <span class="rbadge" id="tb-role">—</span>
     <div class="sp"></div>
-    <button class="btn btn-s" style="height:32px;font-size:11px;padding:0 10px;" id="ai-btn" onclick="openAI()">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a10 10 0 1 0 0 20A10 10 0 0 0 12 2z"/><path d="M12 8v4l3 3"/></svg>
+    <button class="tb-btn" id="ai-btn" onclick="openAI()" style="display:none">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
       IA Layout
     </button>
     <div class="av" id="tb-av" onclick="showTab('settings')"></div>
   </div>
 
-  <!-- MAIN CONTENT -->
-  <div class="content" id="main-content">
+  <!-- CONTENT -->
+  <div class="content">
+
     <!-- KANBAN -->
     <div id="tab-kanban" class="tab-pane on">
-      <div id="imp-warn" class="imp-warn" style="display:none">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-        <span id="imp-count">0</span> tarefa(s) impedida(s) precisam de atenção
-      </div>
-      <div class="kb-wrap" id="kb-board">
-        <div class="empty">Carregando tarefas...</div>
+      <div class="kb-outer">
+        <div class="imp-warn" id="imp-warn">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          <span id="imp-count">0</span> tarefa(s) impedida(s) precisam de atenção
+        </div>
+        <div class="kb-scroll" id="kb-board"><div class="empty">Carregando...</div></div>
       </div>
     </div>
+
     <!-- FEED -->
     <div id="tab-feed" class="tab-pane">
-      <div class="sh"><h3>Feed do Projeto</h3><span style="font-size:11px;color:var(--muted);display:flex;align-items:center;gap:5px"><span class="online-dot"></span><span id="online-txt">online</span></span></div>
+      <div class="sh">
+        <h3>Feed do Projeto</h3>
+        <span style="font-size:11px;color:var(--muted);display:flex;align-items:center;gap:5px">
+          <span class="online-dot"></span><span id="online-txt">ao vivo</span>
+        </span>
+      </div>
       <div id="feed-list"><div class="empty">Carregando...</div></div>
     </div>
-    <!-- DASHBOARD (supervisor/engenheiro) -->
+
+    <!-- DASHBOARD -->
     <div id="tab-dashboard" class="tab-pane">
       <div class="sh"><h3>Olho de Águia</h3></div>
       <div class="sg" id="dash-stats"></div>
-      <div style="padding:0 14px 16px">
+      <div style="padding:0 12px 16px">
         <div class="sh" style="padding:4px 0 8px"><h3>Por Time</h3></div>
         <div id="dash-teams"></div>
       </div>
     </div>
-    <!-- MINHAS TAREFAS (worker) -->
+
+    <!-- MINHAS TAREFAS -->
     <div id="tab-mytasks" class="tab-pane">
       <div class="sh"><h3>Minhas Tarefas</h3></div>
-      <div id="my-tasks-list"><div class="empty">Carregando...</div></div>
+      <div id="my-tasks"></div>
     </div>
+
     <!-- SETTINGS -->
     <div id="tab-settings" class="tab-pane">
-      <div style="padding:14px">
-        <div class="set-profile" id="set-profile-card"></div>
+      <div style="padding:12px">
+        <div class="set-card" id="set-profile"></div>
         <div id="sup-tools" style="display:none">
-          <div class="sh" style="padding:0 0 8px"><h3>Ferramentas</h3></div>
+          <div class="sh" style="padding:0 0 8px"><h3>Ferramentas do Supervisor</h3></div>
           <button class="btn btn-s lg" style="width:100%;margin-bottom:9px" onclick="openNewTask()">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
             Nova Tarefa
@@ -327,7 +348,7 @@ select.fi-sel option{background:var(--bg2)}
             Gerar Convite
           </button>
           <button class="btn btn-s lg" style="width:100%" onclick="openAI()">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4"/></svg>
             IA — Ler Layout
           </button>
         </div>
@@ -337,7 +358,7 @@ select.fi-sel option{background:var(--bg2)}
   </div>
 
   <!-- BOTTOM NAV -->
-  <div class="bnav" id="bnav">
+  <div class="bnav">
     <button class="nb on" id="nb-kanban" onclick="showTab('kanban')">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="18" rx="1"/><rect x="14" y="3" width="7" height="11" rx="1"/><rect x="14" y="17" width="7" height="4" rx="1"/></svg>
       Kanban
@@ -345,7 +366,7 @@ select.fi-sel option{background:var(--bg2)}
     <button class="nb" id="nb-feed" onclick="showTab('feed')" style="position:relative">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
       Feed
-      <span class="ndot" id="feed-dot" style="display:none"></span>
+      <span class="ndot" id="feed-dot"></span>
     </button>
     <button class="nb" id="nb-dashboard" onclick="showTab('dashboard')">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M7 16l4-4 4 4 4-4"/></svg>
@@ -361,36 +382,33 @@ select.fi-sel option{background:var(--bg2)}
     </button>
   </div>
 
-  <!-- PTT BUTTON -->
-  <button class="ptt" id="ptt-btn">
+  <!-- PTT -->
+  <button class="ptt-btn" id="ptt-btn">
     <div class="ptt-ring"></div>
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
   </button>
 </div>
 
 <!-- PTT OVERLAY -->
-<div class="ptt-ov" id="ptt-ov">
-  <div class="ptt-st"><span class="rdot"></span>Transmitindo PTT</div>
-  <div class="ptt-tx" id="ptt-tx">Aguardando fala...</div>
+<div class="ptt-overlay" id="ptt-ov">
+  <div class="ptt-status"><span class="rdot"></span>Transmitindo PTT</div>
+  <div class="ptt-transcript" id="ptt-tx">Aguardando fala...</div>
 </div>
 
 <!-- ══ MODALS ══ -->
 
 <!-- Task Detail -->
-<div class="ov" id="ov-task" onclick="closeOvTask(event)">
-  <div class="modal" id="m-task">
-    <div class="mh"></div>
-    <div id="m-task-body"></div>
-  </div>
+<div class="ov" id="ov-task" onclick="if(event.target===this)closeOv('ov-task')">
+  <div class="modal" id="m-task"><div class="mh"></div><div id="m-task-body"></div></div>
 </div>
 
 <!-- New Task -->
-<div class="ov" id="ov-newtask" onclick="closeOv('ov-newtask',event)">
+<div class="ov" id="ov-newtask" onclick="if(event.target===this)closeOv('ov-newtask')">
   <div class="modal">
     <div class="mh"></div>
     <h2>Nova Tarefa</h2>
-    <div class="fg"><label class="fl">Título</label><input class="fi-in" id="nt-tit" placeholder="Descreva a tarefa..."></div>
-    <div class="fg"><label class="fl">Time Responsável</label>
+    <div class="fg"><label class="fl">Título *</label><input class="fi-in" id="nt-tit" placeholder="Descreva a tarefa..."></div>
+    <div class="fg"><label class="fl">Time</label>
       <select class="fi-sel" id="nt-cargo"><option value="marcenaria">Marcenaria</option><option value="eletrica">Elétrica</option><option value="staff">Staff</option></select></div>
     <div class="fg"><label class="fl">Prioridade</label>
       <select class="fi-sel" id="nt-prio"><option value="alta">Alta</option><option value="media">Média</option><option value="baixa">Baixa</option></select></div>
@@ -404,23 +422,23 @@ select.fi-sel option{background:var(--bg2)}
 </div>
 
 <!-- AI Reader -->
-<div class="ov" id="ov-ai" onclick="closeOv('ov-ai',event)">
+<div class="ov" id="ov-ai" onclick="if(event.target===this)closeOv('ov-ai')">
   <div class="modal">
     <div class="mh"></div>
     <h2>IA — Leitura de Layout</h2>
-    <p style="font-size:13px;color:var(--muted);margin-bottom:16px">Envie foto de cronograma manuscrito, planilha ou planta baixa</p>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:14px">Foto de cronograma, planilha ou planta baixa</p>
     <div class="uz" id="ai-uz" onclick="document.getElementById('ai-file').click()">
-      <svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="var(--brand)" stroke-width="1.5" style="margin:0 auto;display:block"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-      <p class="uz-txt">Toque para selecionar imagem</p>
-      <p style="font-size:11px;color:var(--muted);margin-top:3px">JPG, PNG</p>
+      <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="var(--brand)" stroke-width="1.5" style="margin:0 auto;display:block"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+      <p>Toque para selecionar imagem</p>
+      <p style="font-size:11px;margin-top:3px">JPG, PNG</p>
     </div>
-    <input type="file" id="ai-file" accept="image/*" style="display:none" onchange="processAI(event)">
+    <input type="file" id="ai-file" accept="image/*" style="display:none" onchange="runAI(event)">
     <div id="ai-loading" style="display:none;text-align:center;padding:24px">
       <div class="spin" style="margin:0 auto 12px"></div>
-      <div style="font-size:13px;color:var(--muted)">Analisando com Claude AI...</div>
+      <p style="font-size:13px;color:var(--muted)">Analisando com Claude AI...</p>
     </div>
-    <div id="ai-result" style="display:none;margin-top:14px">
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:11px">
+    <div id="ai-result" style="display:none;margin-top:13px">
+      <div style="display:flex;align-items:center;gap:7px;margin-bottom:10px">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
         <span style="font-size:13px;font-weight:600;color:var(--success)">IA detectou <span id="ai-count">0</span> tarefas</span>
       </div>
@@ -431,16 +449,24 @@ select.fi-sel option{background:var(--bg2)}
 </div>
 
 <!-- Invite -->
-<div class="ov" id="ov-invite" onclick="closeOv('ov-invite',event)">
+<div class="ov" id="ov-invite" onclick="if(event.target===this)closeOv('ov-invite')">
   <div class="modal">
     <div class="mh"></div>
     <h2>Gerar Convite</h2>
     <div class="fg"><label class="fl">Cargo do Convidado</label>
-      <select class="fi-sel" id="inv-cargo"><option value="marcenaria">Marcenaria</option><option value="eletrica">Elétrica</option><option value="staff">Staff</option><option value="engenheiro">Engenheiro</option><option value="supervisor">Supervisor</option></select></div>
+      <select class="fi-sel" id="inv-cargo">
+        <option value="marcenaria">Marcenaria</option>
+        <option value="eletrica">Elétrica</option>
+        <option value="staff">Staff</option>
+        <option value="engenheiro">Engenheiro</option>
+        <option value="supervisor">Supervisor</option>
+      </select>
+    </div>
     <div id="inv-result" style="display:none">
       <label class="fl">Token (clique para copiar)</label>
-      <div class="inv-token" id="inv-token" onclick="copyToken()"></div>
-      <p style="font-size:11px;color:var(--muted);text-align:center">Válido por 7 dias • compartilhe com o funcionário</p>
+      <div class="inv-tok" id="inv-tok-disp" onclick="copyTok()"></div>
+      <p style="font-size:11px;color:var(--muted);text-align:center">Válido por 7 dias — compartilhe com o funcionário</p>
+      <p style="font-size:11px;color:var(--muted);text-align:center;margin-top:4px">Link direto: <span id="inv-link" style="color:var(--brand)"></span></p>
     </div>
     <div class="row-btns" style="margin-top:10px">
       <button class="btn btn-s" onclick="closeOv('ov-invite')">Fechar</button>
@@ -450,19 +476,19 @@ select.fi-sel option{background:var(--bg2)}
 </div>
 
 <!-- Photo Evidence -->
-<div class="ov" id="ov-photo" onclick="closeOv('ov-photo',event)">
+<div class="ov" id="ov-photo" onclick="if(event.target===this)closeOv('ov-photo')">
   <div class="modal">
     <div class="mh"></div>
     <h2>Evidência de Conclusão</h2>
-    <p style="font-size:13px;color:var(--muted);margin-bottom:16px">Obrigatório: envie uma foto para concluir a tarefa</p>
-    <div class="photo-area" onclick="document.getElementById('photo-cap').click()">
-      <div style="font-size:38px;margin-bottom:8px">📷</div>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:14px">Obrigatório: envie uma foto para concluir</p>
+    <div class="photo-area" id="photo-zone" onclick="document.getElementById('photo-cap').click()">
+      <div style="font-size:36px;margin-bottom:8px">📷</div>
       <div style="font-size:14px;font-weight:600">Tirar Foto / Galeria</div>
       <div style="font-size:12px;color:var(--muted);margin-top:4px">Toque para abrir câmera</div>
     </div>
     <input type="file" id="photo-cap" accept="image/*" capture="environment" style="display:none" onchange="photoSelected(event)">
-    <div id="photo-preview" style="display:none;margin-top:12px">
-      <img id="photo-img" style="width:100%;border-radius:10px;border:1px solid var(--brd)">
+    <div id="photo-prev" style="display:none;margin-top:12px">
+      <img id="photo-img" style="width:100%;border-radius:10px;border:1px solid var(--brd);display:block">
       <button class="btn btn-suc lg" style="width:100%;margin-top:12px" onclick="confirmConclusion()">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
         Confirmar Conclusão
@@ -474,162 +500,152 @@ select.fi-sel option{background:var(--bg2)}
 <!-- TOAST -->
 <div class="toast" id="toast"></div>
 
+<!-- ══════════════════════════════════════════════════
+     JAVASCRIPT
+══════════════════════════════════════════════════ -->
 <script>
-// ══════════════════════════════════════
-//  CONFIG SUPABASE
-// ══════════════════════════════════════
+// ── CONFIG ──
 const SUPA_URL = 'https://lmwjkmtdyalqvloudlla.supabase.co'
 const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imxtd2prbXRkeWFscXZsb3VkbGxhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM1NDQ2MzMsImV4cCI6MjA4OTEyMDYzM30.e4D-Cm2QJ2dxqtdoNUBMPq2sD5WbCo4eKYCxmYR36qE'
 const CLAUDE_MODEL = 'claude-sonnet-4-20250514'
+const APP_URL = 'https://diverso-talk.vercel.app' // ← update if different domain
 
 const sb = supabase.createClient(SUPA_URL, SUPA_KEY)
 
-// ══════════════════════════════════════
-//  STATE
-// ══════════════════════════════════════
-let currentUser = null
-let currentProfile = null
+// ── STATE ──
+let me = null        // auth user
+let profile = null   // dt_perfis row
 let tasks = []
-let feedItems = []
-let activeTaskId = null
+let feed = []
+let activeTask = null
 let pttActive = false
-let recognition = null
-let aiParsed = []
-let pendingInviteToken = null
-let realtimeChannel = null
+let recog = null
+let aiTasks = []
+let rtChannel = null
+let pendingToken = null
 
 const WORKERS = ['marcenaria','eletrica','staff']
-const SUPERS = ['supervisor','engenheiro']
-const isWorker = () => WORKERS.includes(currentProfile?.cargo)
-const isSuper = () => SUPERS.includes(currentProfile?.cargo)
+const SUPERS  = ['supervisor','engenheiro']
+const isW = () => WORKERS.includes(profile?.cargo)
+const isS = () => SUPERS.includes(profile?.cargo)
 
 const COLS = [
-  {key:'backlog',label:'Backlog',dot:'d-bl'},
-  {key:'em_execucao',label:'Em Execução',dot:'d-ex'},
-  {key:'impedido',label:'Impedido',dot:'d-im'},
-  {key:'revisao',label:'Revisão Eng.',dot:'d-rv'},
-  {key:'concluido',label:'Concluído',dot:'d-cn'},
+  {k:'backlog',    l:'Backlog',        dot:'d-bl'},
+  {k:'em_execucao',l:'Em Execução',    dot:'d-ex'},
+  {k:'impedido',   l:'Impedido',       dot:'d-im'},
+  {k:'revisao',    l:'Revisão Eng.',   dot:'d-rv'},
+  {k:'concluido',  l:'Concluído',      dot:'d-cn'},
 ]
-const STATUS_LABEL = {backlog:'Backlog',em_execucao:'Em Execução',impedido:'Impedido',revisao:'Revisão Eng.',concluido:'Concluído'}
+const SL = {backlog:'Backlog',em_execucao:'Em Execução',impedido:'Impedido',revisao:'Revisão Eng.',concluido:'Concluído'}
 
-// ══════════════════════════════════════
-//  INIT
-// ══════════════════════════════════════
-window.addEventListener('DOMContentLoaded', async () => {
-  // Check for invite token in URL
-  const pathMatch = location.pathname.match(/^\/convite\/(.+)$/)
-  if (pathMatch) pendingInviteToken = pathMatch[1]
+// ── BOOT ──
+;(async () => {
+  // Detect invite token in URL path
+  const m = location.pathname.match(/^\/convite\/(.+)$/)
+  if (m) pendingToken = m[1]
 
   const { data: { session } } = await sb.auth.getSession()
   if (session) {
-    currentUser = session.user
-    await loadProfile()
+    me = session.user
+    await bootProfile()
   } else {
     hideLoading()
-    showScreen('login')
+    showScr('login')
   }
-})
+})()
 
-async function loadProfile() {
+async function bootProfile(tries = 0) {
   const { data, error } = await sb
     .from('dt_perfis')
     .select('*, dt_projetos(nome)')
-    .eq('id', currentUser.id)
+    .eq('id', me.id)
     .single()
 
   if (error || !data) {
-    // Profile might not exist yet (first login)
-    await waitForProfile()
-    return
-  }
-
-  currentProfile = data
-  if (pendingInviteToken) {
-    await applyInvite(pendingInviteToken)
-    pendingInviteToken = null
-  }
-  setupApp()
-}
-
-async function waitForProfile(attempts = 0) {
-  if (attempts > 8) {
-    showToast('Erro ao carregar perfil. Tente novamente.')
+    if (tries < 8) {
+      await delay(800)
+      return bootProfile(tries + 1)
+    }
+    toast('Erro ao carregar perfil. Tente novamente.')
     hideLoading()
-    showScreen('login')
+    showScr('login')
     return
   }
-  await new Promise(r => setTimeout(r, 700))
-  await loadProfile()
+
+  profile = data
+  if (pendingToken) {
+    await applyToken(pendingToken)
+    pendingToken = null
+  }
+  bootApp()
 }
 
-async function applyInvite(token) {
-  const { data, error } = await sb.rpc('dt_usar_convite', { p_token: token })
+async function applyToken(tok) {
+  const { data, error } = await sb.rpc('dt_usar_convite', { p_token: tok.toUpperCase() })
   if (data?.success) {
-    showToast(`Convite aplicado! Cargo: ${data.cargo}`)
-    await loadProfile()
+    toast(`Convite aplicado! Cargo: ${data.cargo}`)
+    // Reload profile with new cargo
+    const { data: p2 } = await sb.from('dt_perfis').select('*, dt_projetos(nome)').eq('id', me.id).single()
+    if (p2) profile = p2
+  } else {
+    toast('Token: ' + (data?.error || 'Inválido'))
   }
 }
 
-// ══════════════════════════════════════
-//  APP SETUP
-// ══════════════════════════════════════
-function setupApp() {
+// ── APP BOOT ──
+function bootApp() {
   updateTopbar()
   setupNav()
   setupPTT()
   loadTasks()
   loadFeed()
-  subscribeRealtime()
+  bootRealtime()
   hideLoading()
-  showScreen('app')
-  showTab(isWorker() ? 'mytasks' : 'kanban')
+  showScr('app')
+  showTab(isW() ? 'mytasks' : 'kanban')
 }
 
 function updateTopbar() {
-  const p = currentProfile
-  const projNome = p.dt_projetos?.nome || 'Projeto'
-  document.getElementById('tb-proj').textContent = projNome
+  const p = profile
+  const proj = p.dt_projetos?.nome || 'Projeto'
+  document.getElementById('tb-proj').textContent = proj
+
   const rb = document.getElementById('tb-role')
   rb.textContent = p.cargo
-  rb.className = 'rbadge ' + (isSuper() ? p.cargo : 'worker')
+  rb.className = 'rbadge ' + p.cargo
 
   const av = document.getElementById('tb-av')
-  if (p.avatar_url) {
-    av.innerHTML = `<img src="${p.avatar_url}" alt="">`
-  } else {
-    av.textContent = initials(p.nome || p.email)
-  }
+  av.innerHTML = p.avatar_url ? `<img src="${p.avatar_url}" alt="">` : esc(ini(p.nome || p.email))
 
-  // Settings card
-  document.getElementById('set-profile-card').innerHTML = `
-    <div class="av" style="width:48px;height:48px;font-size:16px;flex-shrink:0">${p.avatar_url ? `<img src="${p.avatar_url}">` : initials(p.nome || p.email)}</div>
-    <div>
-      <div class="set-name">${p.nome || p.email}</div>
-      <div class="set-email">${p.email}</div>
-      <span class="rbadge ${isSuper() ? p.cargo : 'worker'}" style="margin-top:5px;display:inline-block">${p.cargo}</span>
+  // Settings profile card
+  document.getElementById('set-profile').innerHTML = `
+    <div class="set-profile-row">
+      <div class="av" style="width:46px;height:46px;font-size:15px;flex-shrink:0">
+        ${p.avatar_url ? `<img src="${p.avatar_url}" alt="">` : esc(ini(p.nome || p.email))}
+      </div>
+      <div>
+        <div class="set-nm">${esc(p.nome || p.email)}</div>
+        <div class="set-em">${esc(p.email)}</div>
+        <span class="rbadge ${p.cargo}" style="display:inline-block;margin-top:5px">${p.cargo}</span>
+      </div>
+    </div>
+    <div style="border-top:1px solid var(--brd);margin-top:12px;padding-top:10px;font-size:12px;color:var(--muted)">
+      Projeto: <strong style="color:var(--txt)">${esc(proj)}</strong>
     </div>`
 
-  document.getElementById('sup-tools').style.display = isSuper() ? 'block' : 'none'
-  document.getElementById('ai-btn').style.display = isSuper() ? 'flex' : 'none'
+  document.getElementById('sup-tools').style.display = isS() ? 'block' : 'none'
+  document.getElementById('ai-btn').style.display = isS() ? 'flex' : 'none'
 }
 
 function setupNav() {
-  document.getElementById('nb-dashboard').style.display = isWorker() ? 'none' : 'flex'
-  document.getElementById('nb-mytasks').style.display = isWorker() ? 'flex' : 'none'
+  document.getElementById('nb-dashboard').style.display = isW() ? 'none' : 'flex'
+  document.getElementById('nb-mytasks').style.display = isW() ? 'flex' : 'none'
 }
 
-// ══════════════════════════════════════
-//  SUPABASE DATA
-// ══════════════════════════════════════
+// ── DATA ──
 async function loadTasks() {
-  const q = sb.from('dt_tarefas').select('*').order('created_at', {ascending:false})
-  const { data, error } = await q
-  if (!error && data) {
-    tasks = data
-    renderKanban()
-    renderDashboard()
-    renderMyTasks()
-  }
+  const { data, error } = await sb.from('dt_tarefas').select('*').order('created_at', {ascending:false})
+  if (!error && data) { tasks = data; renderKanban(); renderDash(); renderMyTasks() }
 }
 
 async function loadFeed() {
@@ -637,344 +653,267 @@ async function loadFeed() {
     .from('dt_feed_geral')
     .select('*, dt_perfis(nome,avatar_url,cargo)')
     .order('created_at', {ascending:false})
-    .limit(50)
-  if (!error && data) {
-    feedItems = data
-    renderFeed()
-  }
+    .limit(60)
+  if (!error && data) { feed = data; renderFeed() }
 }
 
-// ══════════════════════════════════════
-//  REALTIME
-// ══════════════════════════════════════
-function subscribeRealtime() {
-  if (realtimeChannel) realtimeChannel.unsubscribe()
-  realtimeChannel = sb.channel('dt_realtime')
-    .on('postgres_changes', {event:'*',schema:'public',table:'dt_tarefas'}, payload => {
-      handleTaskChange(payload)
+// ── REALTIME ──
+function bootRealtime() {
+  if (rtChannel) rtChannel.unsubscribe()
+  rtChannel = sb.channel('diversotalk')
+    .on('postgres_changes', {event:'*', schema:'public', table:'dt_tarefas'}, async ({eventType, new:n, old:o}) => {
+      if (eventType === 'INSERT') tasks.unshift(n)
+      else if (eventType === 'UPDATE') { const i = tasks.findIndex(t=>t.id===n.id); if(i>=0) tasks[i]=n }
+      else if (eventType === 'DELETE') tasks = tasks.filter(t=>t.id!==o.id)
+      renderKanban(); renderDash(); renderMyTasks()
     })
-    .on('postgres_changes', {event:'INSERT',schema:'public',table:'dt_feed_geral'}, payload => {
-      handleFeedInsert(payload.new)
+    .on('postgres_changes', {event:'INSERT', schema:'public', table:'dt_feed_geral'}, async ({new:n}) => {
+      const { data: p } = await sb.from('dt_perfis').select('nome,avatar_url,cargo').eq('id',n.usuario_id).single()
+      feed.unshift({...n, dt_perfis: p})
+      renderFeed()
+      const active = document.querySelector('.tab-pane.on')
+      if (active?.id !== 'tab-feed') document.getElementById('feed-dot').style.display = 'block'
     })
     .subscribe()
 }
 
-function handleTaskChange(payload) {
-  if (payload.eventType === 'INSERT') {
-    tasks.unshift(payload.new)
-  } else if (payload.eventType === 'UPDATE') {
-    const idx = tasks.findIndex(t => t.id === payload.new.id)
-    if (idx >= 0) tasks[idx] = payload.new
-  } else if (payload.eventType === 'DELETE') {
-    tasks = tasks.filter(t => t.id !== payload.old.id)
-  }
-  renderKanban()
-  renderDashboard()
-  renderMyTasks()
-}
-
-async function handleFeedInsert(row) {
-  // Fetch profile info
-  const { data: prof } = await sb.from('dt_perfis').select('nome,avatar_url,cargo').eq('id',row.usuario_id).single()
-  const item = { ...row, dt_perfis: prof }
-  feedItems.unshift(item)
-  renderFeed()
-  const activeTab = document.querySelector('.tab-pane.on')
-  if (activeTab && activeTab.id !== 'tab-feed') {
-    document.getElementById('feed-dot').style.display = 'block'
-  }
-}
-
-// ══════════════════════════════════════
-//  AUTH
-// ══════════════════════════════════════
+// ── AUTH ──
 async function loginGoogle() {
   const { error } = await sb.auth.signInWithOAuth({
     provider: 'google',
-    options: { redirectTo: location.origin }
+    options: { redirectTo: location.origin + location.pathname }
   })
-  if (error) showToast('Erro ao conectar com Google')
+  if (error) toast('Erro ao conectar com Google: ' + error.message)
 }
 
-// Handle OAuth redirect
 sb.auth.onAuthStateChange(async (event, session) => {
-  if (event === 'SIGNED_IN' && session && !currentUser) {
-    currentUser = session.user
-    await loadProfile()
+  if ((event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') && session && !profile) {
+    me = session.user
+    await bootProfile()
   } else if (event === 'SIGNED_OUT') {
-    currentUser = null
-    currentProfile = null
-    if (realtimeChannel) realtimeChannel.unsubscribe()
-    showScreen('login')
+    me = null; profile = null
+    if (rtChannel) rtChannel.unsubscribe()
+    tasks = []; feed = []
+    showScr('login')
   }
 })
 
-async function useInviteToken() {
-  const token = document.getElementById('inv-token-input').value.trim()
-  if (!token) { showToast('Digite o token'); return }
-  if (!currentUser) {
-    // Save token and login first
-    pendingInviteToken = token
-    await loginGoogle()
-    return
-  }
-  await applyInvite(token)
+async function useToken() {
+  const tok = document.getElementById('inv-tok-in').value.trim().toUpperCase()
+  if (!tok) { toast('Digite o token'); return }
+  if (!me) { pendingToken = tok; await loginGoogle(); return }
+  await applyToken(tok)
 }
 
 async function doLogout() {
   await sb.auth.signOut()
-  showScreen('login')
 }
 
-// ══════════════════════════════════════
-//  KANBAN
-// ══════════════════════════════════════
+// ── KANBAN ──
 function renderKanban() {
-  const filtered = isSuper() ? tasks : tasks.filter(t => t.cargo_responsavel === currentProfile.cargo)
-  const impCount = filtered.filter(t => t.status === 'impedido').length
+  const all = isS() ? tasks : tasks.filter(t => t.cargo_responsavel === profile.cargo)
+  const blocked = all.filter(t=>t.status==='impedido').length
   const warn = document.getElementById('imp-warn')
-  if (impCount > 0) { warn.style.display = 'flex'; document.getElementById('imp-count').textContent = impCount }
-  else warn.style.display = 'none'
+  if (blocked > 0) { warn.classList.add('on'); document.getElementById('imp-count').textContent = blocked }
+  else warn.classList.remove('on')
 
-  const board = document.getElementById('kb-board')
-  board.innerHTML = COLS.map(col => {
-    const colTasks = filtered.filter(t => t.status === col.key)
-    const addBtn = isSuper() && col.key === 'backlog' ? `<div class="kc-add"><button onclick="openNewTask()">+ Nova Tarefa</button></div>` : ''
+  document.getElementById('kb-board').innerHTML = COLS.map(col => {
+    const ct = all.filter(t => t.status === col.k)
+    const addBtn = isS() && col.k === 'backlog'
+      ? `<div class="kc-add"><button class="kc-add-btn" onclick="openNewTask()">+ Nova Tarefa</button></div>` : ''
     return `<div class="kc">
-      <div class="kch">
-        <div class="dot ${col.dot}"></div>
-        <span class="kch-title">${col.label}</span>
-        <span class="kch-count">${colTasks.length}</span>
-      </div>
+      <div class="kch"><div class="dot ${col.dot}"></div><span class="kch-t">${col.l}</span><span class="kch-n">${ct.length}</span></div>
       ${addBtn}
-      <div class="kc-cards">${colTasks.map(t => taskCard(t)).join('') || '<div style="padding:8px;font-size:12px;color:var(--muted);text-align:center">Vazio</div>'}</div>
+      <div class="kc-cards">
+        ${ct.map(t => `<div class="tc" onclick="openTask('${t.id}')">
+          <div class="tc-t">${esc(t.titulo)}</div>
+          <div class="tc-m">
+            <span class="pill ${t.cargo_responsavel}">${t.cargo_responsavel}</span>
+            <span class="pill ${t.prioridade}">${t.prioridade}</span>
+            ${t.localizacao ? `<span style="font-size:10px;color:var(--muted)">📍 ${esc(t.localizacao)}</span>` : ''}
+          </div>
+        </div>`).join('') || '<div class="kc-empty">Vazio</div>'}
+      </div>
     </div>`
   }).join('')
 }
 
-function taskCard(t) {
-  return `<div class="tc" onclick="openTask('${t.id}')">
-    <div class="tc-title">${escHtml(t.titulo)}</div>
-    <div class="tc-meta">
-      <span class="pill ${t.cargo_responsavel}">${t.cargo_responsavel}</span>
-      <span class="pill ${t.prioridade}">${t.prioridade}</span>
-      ${t.localizacao ? `<span style="font-size:10px;color:var(--muted)">📍 ${escHtml(t.localizacao)}</span>` : ''}
-    </div>
-  </div>`
-}
-
-// ══════════════════════════════════════
-//  TASK DETAIL
-// ══════════════════════════════════════
+// ── TASK DETAIL ──
 async function openTask(id) {
-  const t = tasks.find(x => x.id === id)
+  const t = tasks.find(x=>x.id===id)
   if (!t) return
-  activeTaskId = id
+  activeTask = id
 
-  const canChangeStatus = isSuper()
-  const canConclude = isWorker() && t.cargo_responsavel === currentProfile.cargo && t.status === 'em_execucao'
+  const canStatus = isS()
+  const canConclude = isW() && t.cargo_responsavel === profile.cargo && t.status === 'em_execucao'
 
-  // Load comments
   const { data: comments } = await sb
     .from('dt_comentarios')
     .select('*, dt_perfis(nome,avatar_url,cargo)')
     .eq('tarefa_id', id)
     .order('created_at', {ascending:true})
 
-  const commentsHtml = (comments || []).map(c => `
-    <div class="cm">
-      <div class="cm-av">${initials(c.dt_perfis?.nome || '?')}</div>
-      <div class="cm-body">
-        <div class="cm-name">${escHtml(c.dt_perfis?.nome || 'Usuário')}</div>
-        <div class="cm-txt">${escHtml(c.texto)}</div>
-        <div class="cm-time">${fmtTime(c.created_at)}</div>
-      </div>
-    </div>`).join('')
-
-  const statusBtns = canChangeStatus ? `
-    <div class="fg">
-      <label class="fl">Mover para</label>
-      <div class="sbrow">
-        ${COLS.map(c => `<button class="sb ${t.status === c.key ? 'on-'+c.key : ''}" onclick="changeStatus('${t.id}','${c.key}')">${c.label}</button>`).join('')}
-      </div>
-    </div>` : ''
+  const cmHtml = (comments||[]).map(c => `<div class="cm">
+    <div class="cm-av">${c.dt_perfis?.avatar_url ? `<img src="${c.dt_perfis.avatar_url}">` : esc(ini(c.dt_perfis?.nome||'?'))}</div>
+    <div><div class="cm-nm">${esc(c.dt_perfis?.nome||'Usuário')}</div>
+    <div class="cm-tx">${esc(c.texto)}</div>
+    <div class="cm-tm">${fmt(c.created_at)}</div></div>
+  </div>`).join('')
 
   document.getElementById('m-task-body').innerHTML = `
-    <div style="display:flex;align-items:flex-start;gap:8px;margin-bottom:12px">
-      <h2 style="font-size:19px;flex:1;line-height:1.3">${escHtml(t.titulo)}</h2>
-      <button onclick="closeOvTask()" style="background:none;border:none;color:var(--muted);cursor:pointer;padding:4px">
+    <div style="display:flex;align-items:flex-start;gap:8px;margin-bottom:11px">
+      <h2 style="font-size:19px;flex:1;line-height:1.3">${esc(t.titulo)}</h2>
+      <button onclick="closeOv('ov-task')" style="background:none;border:none;color:var(--muted);cursor:pointer;padding:4px;flex-shrink:0">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
       </button>
     </div>
-    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px">
+    <div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:12px">
       <span class="pill ${t.cargo_responsavel}">${t.cargo_responsavel}</span>
       <span class="pill ${t.prioridade}">${t.prioridade}</span>
-      <span style="font-size:11px;padding:3px 8px;background:var(--surf);border-radius:4px;color:var(--muted)">${STATUS_LABEL[t.status]}</span>
+      <span style="font-size:11px;padding:3px 8px;background:var(--surf);border-radius:4px;color:var(--muted)">${SL[t.status]}</span>
     </div>
-    ${t.localizacao ? `<div style="font-size:13px;color:var(--muted);margin-bottom:12px">📍 ${escHtml(t.localizacao)}</div>` : ''}
-    ${t.descricao ? `<div style="font-size:14px;line-height:1.6;background:var(--surf);border-radius:8px;padding:12px;margin-bottom:14px">${escHtml(t.descricao)}</div>` : ''}
-    ${t.foto_evidencia ? `<div class="fi-photo" style="margin-bottom:14px"><img src="${t.foto_evidencia}" alt="Evidência"></div>` : ''}
-    ${statusBtns}
+    ${t.localizacao ? `<div style="font-size:13px;color:var(--muted);margin-bottom:11px">📍 ${esc(t.localizacao)}</div>` : ''}
+    ${t.descricao ? `<div style="font-size:14px;line-height:1.6;background:var(--surf);border-radius:8px;padding:11px;margin-bottom:13px">${esc(t.descricao)}</div>` : ''}
+    ${t.foto_evidencia ? `<div style="margin-bottom:13px;border-radius:10px;overflow:hidden;border:1px solid var(--brd)"><img src="${t.foto_evidencia}" style="width:100%;display:block" alt="Evidência"></div>` : ''}
+    ${canStatus ? `<div class="fg"><label class="fl">Mover para</label><div class="sbrow">
+      ${COLS.map(c=>`<button class="sb ${t.status===c.k?'on-'+c.k:''}" onclick="changeStatus('${t.id}','${c.k}')">${c.l}</button>`).join('')}
+    </div></div>` : ''}
     ${canConclude ? `<button class="btn btn-suc lg" style="width:100%;margin-bottom:12px" onclick="openPhotoModal()">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
       Enviar Foto e Concluir
     </button>` : ''}
-    <div class="fg" style="margin-top:4px">
+    <div class="fg">
       <label class="fl">Comentários</label>
-      <div style="margin-bottom:10px">${commentsHtml || '<div style="font-size:12px;color:var(--muted);padding:8px 0">Nenhum comentário ainda</div>'}</div>
+      <div style="margin-bottom:9px">${cmHtml||'<div style="font-size:12px;color:var(--muted);padding:6px 0">Nenhum comentário ainda</div>'}</div>
       <div style="display:flex;gap:7px">
-        <input class="fi-in" id="cm-input" placeholder="Adicionar comentário..." style="flex:1">
+        <input class="fi-in" id="cm-in" placeholder="Adicionar comentário..." style="flex:1">
         <button class="btn btn-s" onclick="addComment()">Enviar</button>
       </div>
     </div>`
 
-  document.getElementById('ov-task').classList.add('on')
-  document.getElementById('m-task').classList.add('open')
+  openOv('ov-task')
 }
 
-async function changeStatus(id, newStatus) {
-  const { error } = await sb.from('dt_tarefas').update({status:newStatus}).eq('id',id)
-  if (error) { showToast('Erro ao atualizar'); return }
-  const t = tasks.find(x => x.id === id)
-  if (t) t.status = newStatus
-  await postFeed('status_tarefa', `moveu "${t?.titulo}" para ${STATUS_LABEL[newStatus]}`, id)
+async function changeStatus(id, s) {
+  const { error } = await sb.from('dt_tarefas').update({status:s}).eq('id',id)
+  if (error) { toast('Erro ao atualizar'); return }
+  const t = tasks.find(x=>x.id===id); if(t) t.status=s
+  await postFeed('status_tarefa', `moveu "${t?.titulo}" → ${SL[s]}`, id)
   openTask(id)
-  renderKanban()
-  renderDashboard()
-  showToast('Status atualizado!')
+  renderKanban(); renderDash()
+  toast('Status atualizado!')
 }
 
 async function addComment() {
-  const txt = document.getElementById('cm-input').value.trim()
+  const txt = document.getElementById('cm-in').value.trim()
   if (!txt) return
-  const t = tasks.find(x => x.id === activeTaskId)
-  const { error } = await sb.from('dt_comentarios').insert({
-    tarefa_id: activeTaskId,
-    usuario_id: currentProfile.id,
-    texto: txt
-  })
-  if (error) { showToast('Erro ao comentar'); return }
-  await postFeed('comentario', `comentou em "${t?.titulo}": ${txt}`, activeTaskId)
-  document.getElementById('cm-input').value = ''
-  openTask(activeTaskId)
-  showToast('Comentário enviado!')
+  const t = tasks.find(x=>x.id===activeTask)
+  const { error } = await sb.from('dt_comentarios').insert({tarefa_id:activeTask, usuario_id:profile.id, texto:txt})
+  if (error) { toast('Erro ao comentar'); return }
+  await postFeed('comentario', `comentou em "${t?.titulo}": ${txt}`, activeTask)
+  document.getElementById('cm-in').value = ''
+  openTask(activeTask)
+  toast('Comentário enviado!')
 }
 
-function closeOvTask(e) {
-  if (e && e.target !== document.getElementById('ov-task') && e.type === 'click') return
-  document.getElementById('ov-task').classList.remove('on')
-}
-
-// ══════════════════════════════════════
-//  NEW TASK
-// ══════════════════════════════════════
-function openNewTask() { openOv('ov-newtask') }
+// ── NEW TASK ──
+function openNewTask() { closeOv('ov-task'); openOv('ov-newtask') }
 
 async function createTask() {
-  const titulo = document.getElementById('nt-tit').value.trim()
-  if (!titulo) { showToast('Informe o título'); return }
+  const tit = document.getElementById('nt-tit').value.trim()
+  if (!tit) { toast('Informe o título'); return }
   const { error } = await sb.from('dt_tarefas').insert({
-    projeto_id: currentProfile.projeto_ativo_id,
-    titulo,
+    projeto_id: profile.projeto_ativo_id,
+    titulo: tit,
     cargo_responsavel: document.getElementById('nt-cargo').value,
     prioridade: document.getElementById('nt-prio').value,
     localizacao: document.getElementById('nt-loc').value || null,
     descricao: document.getElementById('nt-desc').value || null,
     status: 'backlog',
-    criada_por: currentProfile.id,
+    criada_por: profile.id,
   })
-  if (error) { showToast('Erro ao criar tarefa'); return }
-  document.getElementById('nt-tit').value = ''
-  document.getElementById('nt-loc').value = ''
-  document.getElementById('nt-desc').value = ''
+  if (error) { toast('Erro: ' + error.message); return }
+  ;['nt-tit','nt-loc','nt-desc'].forEach(id => document.getElementById(id).value='')
   closeOv('ov-newtask')
-  await postFeed('status_tarefa', `criou nova tarefa: "${titulo}"`)
+  await postFeed('status_tarefa', `criou tarefa: "${tit}"`)
   await loadTasks()
-  showToast('Tarefa criada!')
+  toast('Tarefa criada!')
 }
 
-// ══════════════════════════════════════
-//  PHOTO EVIDENCE
-// ══════════════════════════════════════
+// ── PHOTO EVIDENCE ──
 function openPhotoModal() {
-  closeOvTask()
-  document.getElementById('photo-preview').style.display = 'none'
+  closeOv('ov-task')
+  document.getElementById('photo-prev').style.display = 'none'
+  document.getElementById('photo-zone').style.display = 'block'
   document.getElementById('photo-cap').value = ''
-  document.querySelector('.photo-area').style.display = 'block'
   openOv('ov-photo')
 }
 
 function photoSelected(e) {
-  const file = e.target.files[0]
-  if (!file) return
-  const reader = new FileReader()
-  reader.onload = ev => {
+  const file = e.target.files[0]; if (!file) return
+  const r = new FileReader()
+  r.onload = ev => {
     document.getElementById('photo-img').src = ev.target.result
-    document.getElementById('photo-preview').style.display = 'block'
-    document.querySelector('.photo-area').style.display = 'none'
+    document.getElementById('photo-prev').style.display = 'block'
+    document.getElementById('photo-zone').style.display = 'none'
   }
-  reader.readAsDataURL(file)
+  r.readAsDataURL(file)
 }
 
 async function confirmConclusion() {
-  const t = tasks.find(x => x.id === activeTaskId)
-  if (!t) return
-
-  // Upload photo to Supabase Storage
+  const t = tasks.find(x=>x.id===activeTask); if (!t) return
   const file = document.getElementById('photo-cap').files[0]
   let photoUrl = null
 
   if (file) {
-    const ext = file.name.split('.').pop()
-    const path = `evidencias/${activeTaskId}.${ext}`
-    const { data: upData, error: upErr } = await sb.storage
-      .from('diversotalk')
-      .upload(path, file, { upsert: true })
+    const ext = file.name.split('.').pop() || 'jpg'
+    const path = `evidencias/${activeTask}-${Date.now()}.${ext}`
+    const { error: upErr } = await sb.storage.from('diversotalk').upload(path, file, {upsert:true, contentType:file.type})
     if (!upErr) {
-      const { data: urlData } = sb.storage.from('diversotalk').getPublicUrl(path)
-      photoUrl = urlData.publicUrl
+      const { data: u } = sb.storage.from('diversotalk').getPublicUrl(path)
+      photoUrl = u.publicUrl
     }
   }
 
   const { error } = await sb.from('dt_tarefas').update({
     status: 'concluido',
     foto_evidencia: photoUrl,
-    concluida_por: currentProfile.id,
+    concluida_por: profile.id,
     concluida_em: new Date().toISOString()
-  }).eq('id', activeTaskId)
+  }).eq('id', activeTask)
 
-  if (error) { showToast('Erro ao concluir'); return }
-
-  await postFeed('tarefa_concluida', `concluiu "${t.titulo}"${photoUrl ? ' com foto de evidência' : ''}`, activeTaskId)
+  if (error) { toast('Erro ao concluir: ' + error.message); return }
+  await postFeed('tarefa_concluida', `concluiu "${t.titulo}"${photoUrl ? ' ✓ com foto' : ''}`, activeTask)
   closeOv('ov-photo')
   await loadTasks()
-  showToast('Tarefa concluída!')
+  toast('Tarefa concluída!')
 }
 
-// ══════════════════════════════════════
-//  FEED
-// ══════════════════════════════════════
+// ── FEED ──
 function renderFeed() {
   const list = document.getElementById('feed-list')
-  if (!feedItems.length) { list.innerHTML = '<div class="empty">Nenhuma atividade ainda</div>'; return }
-  list.innerHTML = feedItems.map(f => {
-    const prof = f.dt_perfis || {}
-    const nm = prof.nome || 'Usuário'
-    const cargo = f.cargo_usuario || prof.cargo || ''
-    const avHtml = prof.avatar_url
-      ? `<img src="${prof.avatar_url}" alt="">`
-      : initials(nm)
-    const isAudio = f.tipo === 'audio_ptt'
+  const visible = isS() ? feed : feed.filter(f => {
+    const c = f.cargo_usuario || f.dt_perfis?.cargo
+    return c === profile.cargo || SUPERS.includes(c)
+  })
+  if (!visible.length) { list.innerHTML = '<div class="empty">Nenhuma atividade ainda</div>'; return }
+  list.innerHTML = visible.map(f => {
+    const p = f.dt_perfis || {}
+    const nm = p.nome || 'Usuário'
+    const cg = f.cargo_usuario || p.cargo || ''
+    const avHtml = p.avatar_url ? `<img src="${p.avatar_url}" alt="">` : esc(ini(nm))
+    const isPTT = f.tipo === 'audio_ptt'
     return `<div class="fi">
-      <div class="fi-av" style="background:${cargoColor(cargo)}">${avHtml}</div>
+      <div class="fi-av" style="background:${cargoBg(cg)}">${avHtml}</div>
       <div class="fi-body">
         <div class="fi-hdr">
-          <span class="fi-name">${escHtml(nm)}</span>
-          ${cargo ? `<span class="pill ${cargo}" style="font-size:9px">${cargo}</span>` : ''}
-          <span class="fi-time">${fmtTime(f.created_at)}</span>
+          <span class="fi-nm">${esc(nm)}</span>
+          ${cg ? `<span class="pill ${cg}" style="font-size:9px">${cg}</span>` : ''}
+          <span class="fi-tm">${fmt(f.created_at)}</span>
         </div>
-        ${isAudio ? `<div class="ptt-bubble"><div class="wave"><span></span><span></span><span></span><span></span><span></span><span></span></div><span style="font-size:12px;flex:1">${escHtml(f.conteudo)}</span><span style="font-size:10px;color:var(--brand);font-weight:700">PTT</span></div>`
-        : `<div class="fi-txt">${escHtml(f.conteudo)}</div>`}
+        ${isPTT
+          ? `<div class="ptt-bbl"><div class="wave"><span></span><span></span><span></span><span></span><span></span><span></span></div><span style="font-size:12px;flex:1">${esc(f.conteudo)}</span><span style="font-size:10px;color:var(--brand);font-weight:700">PTT</span></div>`
+          : `<div class="fi-tx">${esc(f.conteudo)}</div>`}
       </div>
     </div>`
   }).join('')
@@ -982,94 +921,78 @@ function renderFeed() {
 
 async function postFeed(tipo, conteudo, refId = null) {
   await sb.from('dt_feed_geral').insert({
-    projeto_id: currentProfile.projeto_ativo_id,
-    usuario_id: currentProfile.id,
-    cargo_usuario: currentProfile.cargo,
+    projeto_id: profile.projeto_ativo_id,
+    usuario_id: profile.id,
+    cargo_usuario: profile.cargo,
     tipo, conteudo,
     referencia_id: refId
   })
 }
 
-function cargoColor(c) {
-  const m = {supervisor:'rgba(245,166,35,.25)',engenheiro:'rgba(59,130,246,.25)',marcenaria:'rgba(139,92,246,.25)',eletrica:'rgba(59,130,246,.2)',staff:'rgba(20,184,166,.25)'}
-  return m[c] || 'var(--surf)'
+function cargoBg(c) {
+  return {supervisor:'rgba(245,166,35,.22)',engenheiro:'rgba(59,130,246,.22)',marcenaria:'rgba(139,92,246,.22)',eletrica:'rgba(59,130,246,.18)',staff:'rgba(20,184,166,.22)'}[c] || 'var(--surf)'
 }
 
-// ══════════════════════════════════════
-//  DASHBOARD
-// ══════════════════════════════════════
-function renderDashboard() {
-  const total = tasks.length
+// ── DASHBOARD ──
+function renderDash() {
+  if (!document.getElementById('dash-stats')) return
+  const tot = tasks.length
   const done = tasks.filter(t=>t.status==='concluido').length
-  const inProg = tasks.filter(t=>t.status==='em_execucao').length
-  const blocked = tasks.filter(t=>t.status==='impedido').length
-  const pct = total ? Math.round((done/total)*100) : 0
+  const run  = tasks.filter(t=>t.status==='em_execucao').length
+  const blk  = tasks.filter(t=>t.status==='impedido').length
+  const pct  = tot ? Math.round((done/tot)*100) : 0
 
   document.getElementById('dash-stats').innerHTML = `
-    <div class="sc">
-      <div class="sc-val" style="color:var(--success)">${done}</div>
-      <div class="sc-lb">Concluídas</div>
+    <div class="sc"><div class="sc-v" style="color:var(--success)">${done}</div><div class="sc-l">Concluídas</div>
       <div class="pb"><div class="pbf" style="width:${pct}%;background:var(--success)"></div></div>
-      <div style="font-size:11px;color:var(--muted);margin-top:4px">${pct}% concluído</div>
-    </div>
-    <div class="sc"><div class="sc-val" style="color:var(--info)">${inProg}</div><div class="sc-lb">Em Execução</div></div>
-    <div class="sc"><div class="sc-val" style="color:var(--danger)">${blocked}</div><div class="sc-lb">Impedidas</div></div>
-    <div class="sc"><div class="sc-val">${total}</div><div class="sc-lb">Total</div></div>`
+      <div style="font-size:11px;color:var(--muted);margin-top:4px">${pct}% do total</div></div>
+    <div class="sc"><div class="sc-v" style="color:var(--info)">${run}</div><div class="sc-l">Em Execução</div></div>
+    <div class="sc"><div class="sc-v" style="color:var(--danger)">${blk}</div><div class="sc-l">Impedidas</div></div>
+    <div class="sc"><div class="sc-v">${tot}</div><div class="sc-l">Total</div></div>`
 
   document.getElementById('dash-teams').innerHTML = ['marcenaria','eletrica','staff'].map(c => {
     const tt = tasks.filter(t=>t.cargo_responsavel===c)
     const td = tt.filter(t=>t.status==='concluido').length
     const tp = tt.length ? Math.round((td/tt.length)*100) : 0
     const tb = tt.filter(t=>t.status==='impedido').length
-    return `<div class="team-card">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:9px">
-        <div style="display:flex;align-items:center;gap:8px">
-          <span class="pill ${c}">${c}</span>
-          <span style="font-size:13px;font-weight:600">${tt.length} tarefas</span>
-        </div>
-        <div style="font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:800">${tp}%</div>
+    return `<div class="tc-card">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+        <div style="display:flex;align-items:center;gap:8px"><span class="pill ${c}">${c}</span><span style="font-size:13px;font-weight:600">${tt.length} tarefas</span></div>
+        <span style="font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:800">${tp}%</span>
       </div>
       <div class="pb"><div class="pbf" style="width:${tp}%;background:var(--success)"></div></div>
-      ${tb > 0 ? `<div style="font-size:11px;color:var(--danger);margin-top:5px">⚠ ${tb} impedida(s)</div>` : ''}
+      ${tb > 0 ? `<div style="font-size:11px;color:var(--danger);margin-top:5px">⚠ ${tb} tarefa(s) impedida(s)</div>` : ''}
     </div>`
   }).join('')
 }
 
-// ══════════════════════════════════════
-//  MY TASKS (WORKER)
-// ══════════════════════════════════════
+// ── MY TASKS ──
 function renderMyTasks() {
-  if (!isWorker()) return
-  const mine = tasks.filter(t => t.cargo_responsavel === currentProfile.cargo)
-  const el = document.getElementById('my-tasks-list')
+  if (!isW()) return
+  const mine = tasks.filter(t => t.cargo_responsavel === profile.cargo)
+  const el = document.getElementById('my-tasks')
   if (!mine.length) { el.innerHTML = '<div class="empty">Nenhuma tarefa atribuída ao seu time</div>'; return }
-  el.innerHTML = mine.map(t => `
-    <div class="mt-item" onclick="openTask('${t.id}')">
-      <div style="display:flex;align-items:flex-start;gap:8px">
-        <div class="mt-title">${escHtml(t.titulo)}</div>
-        <span class="pill ${t.prioridade}">${t.prioridade}</span>
-      </div>
-      <div class="mt-meta">
-        <div class="dot ${dotFor(t.status)}" style="width:6px;height:6px"></div>
-        <span style="font-size:12px;color:var(--muted)">${STATUS_LABEL[t.status]}</span>
-        ${t.localizacao ? `<span style="font-size:11px;color:var(--muted)">• 📍 ${escHtml(t.localizacao)}</span>` : ''}
-      </div>
-    </div>`).join('')
+  el.innerHTML = mine.map(t => `<div class="mt-item" onclick="openTask('${t.id}')">
+    <div class="mt-hdr"><div class="mt-title">${esc(t.titulo)}</div><span class="pill ${t.prioridade}">${t.prioridade}</span></div>
+    <div class="mt-meta">
+      <div class="dot ${dotFor(t.status)}" style="width:6px;height:6px"></div>
+      <span style="font-size:12px;color:var(--muted)">${SL[t.status]}</span>
+      ${t.localizacao ? `<span style="font-size:11px;color:var(--muted)">• 📍 ${esc(t.localizacao)}</span>` : ''}
+    </div>
+  </div>`).join('')
 }
 
-function dotFor(s) {
-  return {backlog:'d-bl',em_execucao:'d-ex',impedido:'d-im',revisao:'d-rv',concluido:'d-cn'}[s] || 'd-bl'
-}
+function dotFor(s) { return {backlog:'d-bl',em_execucao:'d-ex',impedido:'d-im',revisao:'d-rv',concluido:'d-cn'}[s]||'d-bl' }
 
-// ══════════════════════════════════════
-//  PTT (Push-to-Talk)
-// ══════════════════════════════════════
+// ── PTT ──
 function setupPTT() {
   const btn = document.getElementById('ptt-btn')
-  btn.addEventListener('mousedown', startPTT)
-  btn.addEventListener('mouseup', stopPTT)
+  btn.addEventListener('mousedown', e => { e.preventDefault(); startPTT() })
+  btn.addEventListener('mouseup', e => { e.preventDefault(); stopPTT() })
+  btn.addEventListener('mouseleave', e => { if(pttActive) stopPTT() })
   btn.addEventListener('touchstart', e => { e.preventDefault(); startPTT() }, {passive:false})
   btn.addEventListener('touchend', e => { e.preventDefault(); stopPTT() }, {passive:false})
+  btn.addEventListener('touchcancel', e => { e.preventDefault(); stopPTT() }, {passive:false})
 }
 
 function startPTT() {
@@ -1079,22 +1002,19 @@ function startPTT() {
   document.getElementById('ptt-ov').classList.add('on')
   document.getElementById('ptt-tx').textContent = 'Aguardando fala...'
 
-  if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
-    const SR = window.SpeechRecognition || window.webkitSpeechRecognition
-    recognition = new SR()
-    recognition.lang = 'pt-BR'
-    recognition.continuous = true
-    recognition.interimResults = true
-    recognition.onresult = ev => {
-      const tx = Array.from(ev.results).map(r => r[0].transcript).join('')
-      document.getElementById('ptt-tx').textContent = tx
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition
+  if (SR) {
+    recog = new SR()
+    recog.lang = 'pt-BR'
+    recog.continuous = true
+    recog.interimResults = true
+    recog.onresult = ev => {
+      document.getElementById('ptt-tx').textContent = Array.from(ev.results).map(r=>r[0].transcript).join('')
     }
-    recognition.onerror = () => {
-      document.getElementById('ptt-tx').textContent = '[Microfone não autorizado]'
-    }
-    recognition.start()
+    recog.onerror = () => { document.getElementById('ptt-tx').textContent = '[Microfone não autorizado]' }
+    try { recog.start() } catch(e){}
   } else {
-    document.getElementById('ptt-tx').textContent = '[Web Speech API indisponível neste browser]'
+    document.getElementById('ptt-tx').textContent = '[Speech API indisponível]'
   }
 }
 
@@ -1103,112 +1023,95 @@ async function stopPTT() {
   pttActive = false
   document.getElementById('ptt-btn').classList.remove('active')
   const tx = document.getElementById('ptt-tx').textContent
-
-  if (recognition) { try { recognition.stop() } catch(e) {} recognition = null }
-
-  await new Promise(r => setTimeout(r, 300))
+  if (recog) { try { recog.stop() } catch(e){} recog = null }
+  await delay(350)
   document.getElementById('ptt-ov').classList.remove('on')
-
   if (tx && tx !== 'Aguardando fala...' && !tx.startsWith('[')) {
     await postFeed('audio_ptt', tx)
-    showToast('PTT enviado ao feed!')
+    toast('PTT enviado!')
   }
 }
 
-// ══════════════════════════════════════
-//  AI READER
-// ══════════════════════════════════════
+// ── AI READER ──
 function openAI() {
   document.getElementById('ai-result').style.display = 'none'
   document.getElementById('ai-loading').style.display = 'none'
   document.getElementById('ai-uz').style.display = 'block'
+  document.getElementById('ai-file').value = ''
   openOv('ov-ai')
 }
 
-async function processAI(e) {
-  const file = e.target.files[0]
-  if (!file) return
+async function runAI(e) {
+  const file = e.target.files[0]; if (!file) return
   document.getElementById('ai-uz').style.display = 'none'
   document.getElementById('ai-loading').style.display = 'block'
 
-  const reader = new FileReader()
-  reader.onload = async ev => {
-    const base64 = ev.target.result.split(',')[1]
-    const mediaType = file.type || 'image/jpeg'
+  const toBase64 = f => new Promise((res, rej) => {
+    const r = new FileReader()
+    r.onload = ev => res(ev.target.result.split(',')[1])
+    r.onerror = rej
+    r.readAsDataURL(f)
+  })
 
-    try {
-      const resp = await fetch('https://api.anthropic.com/v1/messages', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          model: CLAUDE_MODEL,
-          max_tokens: 1000,
-          system: 'Você é um assistente para gestão de eventos e montagem de palcos. Analise a imagem fornecida (cronograma manuscrito, planilha, planta baixa ou lista de tarefas) e extraia as tarefas identificadas. Responda SOMENTE com um JSON válido no formato: {"tarefas": [{"titulo": "string", "cargo": "marcenaria|eletrica|staff", "prioridade": "alta|media|baixa", "localizacao": "string ou null"}]}. Não inclua markdown, explicações ou texto fora do JSON.',
-          messages: [{
-            role: 'user',
-            content: [{
-              type: 'image',
-              source: { type: 'base64', media_type: mediaType, data: base64 }
-            }, {
-              type: 'text',
-              text: 'Analise esta imagem e extraia todas as tarefas identificáveis para montagem de palco/evento. Retorne apenas JSON.'
-            }]
-          }]
-        })
+  try {
+    const b64 = await toBase64(file)
+    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json', 'anthropic-version':'2023-06-01'},
+      body: JSON.stringify({
+        model: CLAUDE_MODEL,
+        max_tokens: 1000,
+        system: 'Você analisa imagens de cronogramas manuscritos, planilhas e plantas baixas para extrair tarefas de montagem de palcos e eventos. Responda APENAS com JSON válido no formato: {"tarefas":[{"titulo":"string","cargo":"marcenaria|eletrica|staff","prioridade":"alta|media|baixa","localizacao":"string ou null"}]}. Sem markdown, sem explicações, apenas JSON puro.',
+        messages: [{role:'user', content:[
+          {type:'image', source:{type:'base64', media_type:file.type||'image/jpeg', data:b64}},
+          {type:'text', text:'Extraia as tarefas desta imagem e retorne apenas JSON.'}
+        ]}]
       })
-
-      const data = await resp.json()
-      const text = data.content?.[0]?.text || ''
-      const clean = text.replace(/```json|```/g, '').trim()
-      const parsed = JSON.parse(clean)
-      aiParsed = parsed.tarefas || []
-
-      document.getElementById('ai-loading').style.display = 'none'
-      document.getElementById('ai-count').textContent = aiParsed.length
-      document.getElementById('ai-preview').innerHTML = aiParsed.map(t => `
-        <div class="ai-item">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-          <div class="ai-item-info">
-            <div class="ai-item-title">${escHtml(t.titulo)}</div>
-            <div class="ai-item-meta"><span class="pill ${t.cargo}">${t.cargo}</span><span class="pill ${t.prioridade}">${t.prioridade}</span></div>
-          </div>
-        </div>`).join('')
-      document.getElementById('ai-result').style.display = 'block'
-
-    } catch(err) {
-      document.getElementById('ai-loading').style.display = 'none'
-      document.getElementById('ai-uz').style.display = 'block'
-      showToast('Erro ao processar imagem com IA')
-    }
+    })
+    const data = await resp.json()
+    const raw = (data.content?.[0]?.text||'').replace(/```json|```/g,'').trim()
+    const parsed = JSON.parse(raw)
+    aiTasks = parsed.tarefas || []
+    document.getElementById('ai-loading').style.display = 'none'
+    document.getElementById('ai-count').textContent = aiTasks.length
+    document.getElementById('ai-preview').innerHTML = aiTasks.map(t => `<div class="ai-item">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="2.5" style="flex-shrink:0"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+      <div class="ai-item-info">
+        <div class="ai-item-title">${esc(t.titulo)}</div>
+        <div class="ai-item-meta"><span class="pill ${t.cargo}">${t.cargo}</span><span class="pill ${t.prioridade}">${t.prioridade}</span></div>
+      </div>
+    </div>`).join('')
+    document.getElementById('ai-result').style.display = 'block'
+  } catch(err) {
+    document.getElementById('ai-loading').style.display = 'none'
+    document.getElementById('ai-uz').style.display = 'block'
+    toast('Erro na IA. Verifique a chave da API.')
   }
-  reader.readAsDataURL(file)
 }
 
 async function importAI() {
-  if (!aiParsed.length) return
-  let imported = 0
-  for (const t of aiParsed) {
+  if (!aiTasks.length) return
+  let ok = 0
+  for (const t of aiTasks) {
     const { error } = await sb.from('dt_tarefas').insert({
-      projeto_id: currentProfile.projeto_ativo_id,
+      projeto_id: profile.projeto_ativo_id,
       titulo: t.titulo,
       cargo_responsavel: t.cargo,
       prioridade: t.prioridade,
-      localizacao: t.localizacao || null,
+      localizacao: t.localizacao||null,
       descricao: 'Importado via IA — leitura de layout',
       status: 'backlog',
-      criada_por: currentProfile.id,
+      criada_por: profile.id,
     })
-    if (!error) imported++
+    if (!error) ok++
   }
   closeOv('ov-ai')
-  await postFeed('status_tarefa', `importou ${imported} tarefas via leitura de layout por IA`)
+  await postFeed('status_tarefa', `importou ${ok} tarefa(s) via IA`)
   await loadTasks()
-  showToast(`${imported} tarefa(s) importada(s) via IA!`)
+  toast(`${ok} tarefa(s) importada(s)!`)
 }
 
-// ══════════════════════════════════════
-//  INVITE
-// ══════════════════════════════════════
+// ── INVITE ──
 function openInvite() {
   document.getElementById('inv-result').style.display = 'none'
   openOv('ov-invite')
@@ -1217,84 +1120,72 @@ function openInvite() {
 async function genInvite() {
   const cargo = document.getElementById('inv-cargo').value
   const { data, error } = await sb.rpc('dt_criar_convite', { p_cargo: cargo })
-  if (error || !data?.success) { showToast('Erro ao gerar convite'); return }
-  document.getElementById('inv-token').textContent = data.token
+  if (error || !data?.success) { toast('Erro: ' + (data?.error || error?.message)); return }
+  const tok = data.token
+  document.getElementById('inv-tok-disp').textContent = tok
+  const link = `${APP_URL}/convite/${tok}`
+  document.getElementById('inv-link').textContent = link
   document.getElementById('inv-result').style.display = 'block'
 }
 
-function copyToken() {
-  const token = document.getElementById('inv-token').textContent
-  navigator.clipboard?.writeText(token).then(() => showToast('Token copiado!'))
-    .catch(() => showToast(token))
+function copyTok() {
+  const tok = document.getElementById('inv-tok-disp').textContent
+  navigator.clipboard?.writeText(tok).then(() => toast('Token copiado!')).catch(() => toast('Token: ' + tok))
 }
 
-// ══════════════════════════════════════
-//  NAVIGATION
-// ══════════════════════════════════════
+// ── NAVIGATION ──
 function showTab(tab) {
-  document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('on'))
-  document.querySelectorAll('.nb').forEach(b => b.classList.remove('on'))
+  document.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('on'))
+  document.querySelectorAll('.nb').forEach(b=>b.classList.remove('on'))
   const pane = document.getElementById('tab-'+tab)
   if (pane) pane.classList.add('on')
   const btn = document.getElementById('nb-'+tab)
   if (btn) btn.classList.add('on')
   if (tab === 'feed') document.getElementById('feed-dot').style.display = 'none'
+  if (tab === 'dashboard') renderDash()
 }
 
-// Compatibility alias
-function showScreen(name) {
-  document.querySelectorAll('.scr').forEach(s => s.classList.remove('on'))
-  document.getElementById('s-'+name).classList.add('on')
+function showScr(id) {
+  document.querySelectorAll('.scr').forEach(s=>s.classList.remove('on'))
+  document.getElementById('s-'+id).classList.add('on')
 }
 
 function hideLoading() {
-  const l = document.getElementById('loading')
-  l.style.opacity = '0'
-  l.style.transition = 'opacity .3s'
-  setTimeout(() => l.style.display = 'none', 300)
+  const el = document.getElementById('s-loading')
+  el.style.transition = 'opacity .3s'
+  el.style.opacity = '0'
+  setTimeout(()=>el.classList.remove('on'), 300)
 }
 
-// ══════════════════════════════════════
-//  MODALS HELPERS
-// ══════════════════════════════════════
 function openOv(id) { document.getElementById(id).classList.add('on') }
-function closeOv(id, e) {
-  if (e && e.target !== document.getElementById(id)) return
-  document.getElementById(id).classList.remove('on')
+function closeOv(id) { document.getElementById(id).classList.remove('on') }
+
+// ── TOAST ──
+let toastT = null
+function toast(msg, dur=2800) {
+  const el = document.getElementById('toast')
+  el.textContent = msg
+  el.classList.add('on')
+  clearTimeout(toastT)
+  toastT = setTimeout(()=>el.classList.remove('on'), dur)
 }
 
-// ══════════════════════════════════════
-//  TOAST
-// ══════════════════════════════════════
-let toastTimer = null
-function showToast(msg) {
-  const t = document.getElementById('toast')
-  t.textContent = msg
-  t.classList.add('on')
-  clearTimeout(toastTimer)
-  toastTimer = setTimeout(() => t.classList.remove('on'), 2600)
+// ── UTILS ──
+function esc(s) {
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')
 }
-
-// ══════════════════════════════════════
-//  UTILS
-// ══════════════════════════════════════
-function escHtml(s) {
-  if (!s) return ''
-  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')
-}
-function initials(name) {
+function ini(name) {
   return (name||'?').split(' ').map(w=>w[0]).slice(0,2).join('').toUpperCase()
 }
-function fmtTime(iso) {
+function fmt(iso) {
   if (!iso) return ''
-  const d = new Date(iso)
-  const now = new Date()
-  const diff = Math.floor((now - d) / 1000)
+  const diff = Math.floor((Date.now() - new Date(iso)) / 1000)
   if (diff < 60) return 'agora'
-  if (diff < 3600) return `há ${Math.floor(diff/60)} min`
-  if (diff < 86400) return `há ${Math.floor(diff/3600)}h`
-  return d.toLocaleDateString('pt-BR')
+  if (diff < 3600) return `${Math.floor(diff/60)}min`
+  if (diff < 86400) return `${Math.floor(diff/3600)}h`
+  return new Date(iso).toLocaleDateString('pt-BR', {day:'2-digit',month:'2-digit'})
 }
+function delay(ms) { return new Promise(r=>setTimeout(r,ms)) }
 </script>
 </body>
 </html>
